@@ -1,0 +1,48 @@
+[submodule "bundle/pathogen"]
+	path = bundle/pathogen
+	url = http://github.com/vim-scripts/pathogen.vim.git
+[submodule "bundle/snipmate"]
+	path = bundle/snipmate
+	url = http://github.com/gmarik/snipmate.vim.git
+[submodule "bundle/git.zip"]
+	path = bundle/git.zip
+	url = http://github.com/vim-scripts/git.zip.git
+[submodule "bundle/Tortoise"]
+	path = bundle/Tortoise
+	url = http://github.com/vim-scripts/Tortoise.git
+[submodule "bundle/surround"]
+	path = bundle/surround
+	url = http://github.com/vim-scripts/surround.vim.git
+[submodule "bundle/cescope"]
+	path = bundle/cescope
+	url = http://github.com/vim-scripts/cecscope.git
+[submodule "bundle/genutils"]
+	path = bundle/genutils
+	url = http://github.com/vim-scripts/genutils.git
+[submodule "bundle/Rainbow-Prenthsis-Bundle"]
+	path = bundle/Rainbow-Prenthsis-Bundle
+	url = http://github.com/vim-scripts/Rainbow-Parenthsis-Bundle.git
+[submodule "bundle/vim-cute-python"]
+	path = bundle/vim-cute-python
+	url = http://github.com/ehamberg/vim-cute-python.git
+[submodule "bundle/Pydiction"]
+	path = bundle/Pydiction
+	url = http://github.com/vim-scripts/Pydiction.git
+[submodule "bundle/pydoc.vim"]
+	path = bundle/pydoc.vim
+	url = http://github.com/vim-scripts/pydoc.vim.git
+[submodule "bundle/python_check_syntax.vim"]
+	path = bundle/python_check_syntax.vim
+	url = http://github.com/vim-scripts/python_check_syntax.vim.git
+[submodule "bundle/python_ifold"]
+	path = bundle/python_ifold
+	url = http://github.com/vim-scripts/python_ifold.git
+[submodule "bundle/Command-T"]
+	path = bundle/Command-T
+	url = http://github.com/vim-scripts/Command-T.git
+[submodule "bundle/0scan"]
+	path = bundle/0scan
+	url = http://github.com/vim-scripts/0scan.git
+[submodule "bundle/Torquescript-syntax-highlighting"]
+	path = bundle/Torquescript-syntax-highlighting
+	url = http://github.com/vim-scripts/Torquescript-syntax-highlighting.git
