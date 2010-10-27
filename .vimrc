@@ -78,13 +78,15 @@ set lcs=tab:>-,trail:_
 " - Use a mix of tabs and spaces when I press the TAB key (width 4)
 " - Default setting of tabstop (width 4) -- printing, etc
 " - Number of spaces to use for each step of indent (width 4)
-" - Lines with the same indent level form a fold   set noexpandtab
+" - Lines with the same indent level form a fold
 set softtabstop=4
 set tabstop=4
 set shiftwidth=4
 set expandtab
-set foldmethod=indent nofoldenable
+set foldmethod=indent foldenable
 
+" set verbosefile=~.vimlog
+" set verbose=15
 "Bbackspace and cursor keys wrap to
 set whichwrap+=<,>,h,l
 
@@ -103,9 +105,6 @@ nmap <Up> gk
 " set the eformat for SNC for now, will need others
 set efm=%f(%l\\,%c):\ %m
 
-" opens a line that's folded if I move on to it
-set foldopen=all
-
 " Make command line two lines high
 set ch=2
 
@@ -122,6 +121,13 @@ set notagrelative
 " ------------------------------------------------
 " Setup some helper functions
 " ------------------------------------------------
+
+" Force the write of a file with sudo permissions
+" if you forgot to sudo vim. Still prompted for
+" ths sudo passworf
+if has ('unix')
+    cmap w!! %!sudo tee > /dev/null %
+endif
 
 " Set up retabbing on a source file
 nmap  <leader>rr :1,$retab
@@ -142,7 +148,7 @@ if has("unix")
 else
     map <leader>e :e! ~/_vimrc<cr>
     autocmd! bufwritepost _vimrc source ~/_vimrc
-endif
+endif         
 
 " ctrl-tab switches to last used buffer
 nmap <c-tab> :bu #<cr>
@@ -182,7 +188,7 @@ inoremap <silent> <F12> <C-O>:TlistToggle<CR>
 " ------------------------------------------------
 " Setup backup and swap directory management
 " ------------------------------------------------
-if !exists("*InitBackupdir")
+if !exists("*InitBackupDir")
     function InitBackupDir()
         let separator = "."
         let backup = g:vimfiles_path . separator . 'backup/'
@@ -269,14 +275,8 @@ if has("autocmd")
     autocmd BufRead,BufNewfile *.py syntax on
     autocmd BufRead,BufNewfile *.py set ai
 
-    autocmd FileType python set complete+=k~/.vim/syntax/python.vim isk+=.,(
-
-    " For all text files set 'textwidth' to 78 characters.
+    " For all text files set 'textwidth' to 100 characters.
     autocmd FileType html,text,php,vim,c,java,xml,bash,shell,perl,python setlocal textwidth=100
-
-    " XML Tag autocompletion.  Used in conjunction with closetag. 
-    " TODO: Find out how to avoid the unnamed register.
-    "  autocmd Filetype html,xml,xsl source $VIMRUNTIME/plugin/closetag.vim
 
     autocmd BufRead,BufNewfile *.build set filetype=xml
 
@@ -341,9 +341,6 @@ let g:clj_highlight_contrib = 1
 let g:clj_paren_rainbow = 1
 let g:clj_want_gorilla = 1
 
-" For Scons
-au BufNewFile,BufRead SCons* set filetype=scons
-
 if has("unix")
     " Support for Pydiction
     let g:pydiction_location = '~/.vim/bundle/pydiction-1.2/ftplugin/pydiction/complete-dict' 
@@ -352,8 +349,8 @@ if has("unix")
     let g:pydoc_cmd = "pydoc.py"
 else
     " Support for Pydiction
-    let g:pydiction_location = 'C:/Users/Marcus Martin/vimfiles/bundle/pydiction-1.2/ftplugin/pydiction/complete-dict' 
+    let g:pydiction_location = 'C:/Users/Marcus Martin/vimfiles/bundle/Pydiction/complete-dict' 
 
     " Support for pydoc
-    let g:pydoc_cmd = "C:/Python25/Lib/pydoc.py"
+    let g:pydoc_cmd = "C:/Python27/Lib/pydoc.py"
 endif
