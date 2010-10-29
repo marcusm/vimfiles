@@ -43,6 +43,6 @@
 [submodule "bundle/pythonhelper"]
 	path = bundle/pythonhelper
 	url = http://github.com/vim-scripts/pythonhelper.git
-[submodule "bundle/python_check_sytax.vim"]
-	path = bundle/python_check_sytax.vim
-	url = git@github.com:marcusm/python_check_syntax.vim.git
+[submodule "bundle/nerdcommenter"]
+	path = bundle/nerdcommenter
+	url = http://github.com/scrooloose/nerdcommenter.git
