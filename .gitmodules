@@ -4,9 +4,6 @@
 [submodule "bundle/snipmate"]
 	path = bundle/snipmate
 	url = http://github.com/gmarik/snipmate.vim.git
-[submodule "bundle/git.zip"]
-	path = bundle/git.zip
-	url = http://github.com/vim-scripts/git.zip.git
 [submodule "bundle/Tortoise"]
 	path = bundle/Tortoise
 	url = http://github.com/vim-scripts/Tortoise.git
@@ -46,6 +43,9 @@
 [submodule "bundle/phpcomplete.vim"]
 	path = bundle/phpcomplete.vim
 	url = https://github.com/shawncplus/phpcomplete.vim.git
-[submodule "bundle/scmdiff.git"]
-	path = bundle/scmdiff.git
-	url = git@github.com:marcusm/vim-scmdiff.git
+[submodule "bundle/vim-git.git"]
+	path = bundle/vim-git.git
+	url = https://github.com/tpope/vim-git.git
+[submodule "bundle/vim-fugitive.git"]
+	path = bundle/vim-fugitive.git
+	url = https://github.com/tpope/vim-fugitive.git
