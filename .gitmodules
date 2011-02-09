@@ -46,3 +46,6 @@
 [submodule "bundle/phpcomplete.vim"]
 	path = bundle/phpcomplete.vim
 	url = https://github.com/shawncplus/phpcomplete.vim.git
+[submodule "bundle/scmdiff.git"]
+	path = bundle/scmdiff.git
+	url = git@github.com:marcusm/vim-scmdiff.git
