@@ -37,12 +37,12 @@
 [submodule "bundle/0scan"]
 	path = bundle/0scan
 	url = http://github.com/vim-scripts/0scan.git
-[submodule "bundle/Torquescript-syntax-highlighting"]
-	path = bundle/Torquescript-syntax-highlighting
-	url = http://github.com/vim-scripts/Torquescript-syntax-highlighting.git
 [submodule "bundle/pythonhelper"]
 	path = bundle/pythonhelper
 	url = http://github.com/vim-scripts/pythonhelper.git
 [submodule "bundle/nerdcommenter"]
 	path = bundle/nerdcommenter
 	url = http://github.com/scrooloose/nerdcommenter.git
+[submodule "bundle/phpcomplete.vim"]
+	path = bundle/phpcomplete.vim
+	url = https://github.com/shawncplus/phpcomplete.vim.git
