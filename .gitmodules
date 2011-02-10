@@ -4,9 +4,6 @@
 [submodule "bundle/snipmate"]
 	path = bundle/snipmate
 	url = http://github.com/gmarik/snipmate.vim.git
-[submodule "bundle/Tortoise"]
-	path = bundle/Tortoise
-	url = http://github.com/vim-scripts/Tortoise.git
 [submodule "bundle/surround"]
 	path = bundle/surround
 	url = http://github.com/vim-scripts/surround.vim.git
@@ -25,9 +22,6 @@
 [submodule "bundle/pydoc.vim"]
 	path = bundle/pydoc.vim
 	url = http://github.com/vim-scripts/pydoc.vim.git
-[submodule "bundle/python_ifold"]
-	path = bundle/python_ifold
-	url = http://github.com/vim-scripts/python_ifold.git
 [submodule "bundle/Command-T"]
 	path = bundle/Command-T
 	url = http://github.com/vim-scripts/Command-T.git
@@ -49,3 +43,9 @@
 [submodule "bundle/vim-fugitive.git"]
 	path = bundle/vim-fugitive.git
 	url = https://github.com/tpope/vim-fugitive.git
+[submodule "bundle/ingretu"]
+	path = bundle/ingretu
+	url = git://github.com/gmarik/ingretu.git
+[submodule "bundle/python_ifold"]
+	path = bundle/python_ifold
+	url = git@github.com:marcusm/python_ifold.git
