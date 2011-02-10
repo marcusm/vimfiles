@@ -5,12 +5,12 @@ if has('win32')
     let g:vimfiles_path = fnamemodify($HOME.'/vimfiles', ':p')
     let g:vimrc_path    = fnamemodify($HOME.'/_vimrc', ':p')
 else
-    let g:vimfiles_path = fnamemodify('$HOME/.vim', ':p')
-    let g:vimrc_path    = fnamemodify('$HOME/.vimrc', ':p')
+    let g:vimfiles_path = fnamemodify('~/.vim', ':p')
+    let g:vimrc_path    = fnamemodify('~/.vim/.vimrc', ':p')
 endif
 
 let g:user_name  = "Marcus Martin"
-let g:user_email = "Marcus Martin@gmail.com"
+let g:user_email = "nymaen@gmail.com"
 let s:baseline_vim_path=""
 let g:pythonpath_fixtures= [ g:vimfiles_path . '/python',
               \              g:vimfiles_path . '/after/ftplugin/python/pyflakes' ]
@@ -24,8 +24,8 @@ set nocompatible
 
 " Setup pathogen before loading any other plugins
 filetype off
-call pathogen#helptags()
 call pathogen#runtime_append_all_bundles() 
+call pathogen#helptags()
 filetype on
 
 "-------------------------------------------------------
@@ -39,7 +39,7 @@ set backspace=indent,eol,start
 set history=500
 set spell
 set showmode
-colorscheme ir_black
+colorscheme ingretu 
 
 "cursor colors
 highlight cursor        cterm=bold
@@ -83,7 +83,7 @@ set softtabstop=4
 set tabstop=4
 set shiftwidth=4
 set expandtab
-set foldmethod=indent foldenable
+set foldmethod=indent nofoldenable
 
 " set verbosefile=~.vimlog
 " set verbose=15
@@ -143,8 +143,8 @@ map <leader>w bcw
 "Fast editing of .vimrc
 "When .vimrc is edited, reload it
 if has("unix")
-    map <leader>e :e! ~/.vimrc<cr>
-    autocmd! bufwritepost .vimrc source ~/.vimrc
+    map <leader>e :e! ~/.gvimrc<cr>
+    autocmd! bufwritepost .gvimrc source ~/.gvimrc
 else
     map <leader>e :e! ~/_vimrc<cr>
     autocmd! bufwritepost _vimrc source ~/_vimrc
@@ -259,7 +259,7 @@ endfunction
 " syntax highlighting will work for cpp files in most cases without tags
 autocmd Syntax cpp call EnhanceCppSyntax()
 " change to directory of current file automatically
-:autocmd BufEnter * lcd %:p:h
+" :autocmd BufEnter * lcd %:p:h
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Only do this part when compiled with support for autocommands.
 "
@@ -275,17 +275,21 @@ if has("autocmd")
     autocmd BufRead,BufNewfile *.py syntax on
     autocmd BufRead,BufNewfile *.py set ai
 
-    " For all text files set 'textwidth' to 100 characters.
-    autocmd FileType html,text,php,vim,c,java,xml,bash,shell,perl,python setlocal textwidth=100
+    " For all text files set 'textwidth' to 100 characters. More comment here.
+    autocmd FileType html,text,php,vim,c,java,xml,bash,magpie,shell,perl,php,python setlocal textwidth=100
 
     autocmd BufRead,BufNewfile *.build set filetype=xml
+    autocmd BufRead,BufNewfile *.mag set filetype=magpie
 
     " Commenting blocks
     autocmd FileType build,xml,html vmap <C-o> <ESC>'<i<!--<ESC>o<ESC>'>o-->
-    autocmd FileType java,c,cpp,cs vmap <C-o> <ESC>'<o/*<ESC>'>o*/
+    autocmd FileType java,c,cpp,cs,php vmap <C-o> <ESC>'<o/*<ESC>'>o*/
 
     " Numbering 
-    autocmd FileType build,xml,html,c,cs,java,perl,shell,bash,cpp,python,vim,php set number
+    autocmd FileType build,xml,html,c,cs,java,perl,shell,bash,cpp,python,vim,php,magpie set number
+
+    "PHP parser check
+    :autocmd FileType php noremap <C-L> :!/usr/bin/php -l %<CR>
 
     " From Bram:
     " When editing a file, always jump to the last known cursor position.
