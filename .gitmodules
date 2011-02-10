@@ -46,6 +46,9 @@
 [submodule "bundle/ingretu"]
 	path = bundle/ingretu
 	url = git://github.com/gmarik/ingretu.git
+[submodule "python_ifold"]
+	path = python_ifold
+	url = git@github.com:marcusm/python_ifold.git
 [submodule "bundle/python_ifold"]
 	path = bundle/python_ifold
 	url = git@github.com:marcusm/python_ifold.git
