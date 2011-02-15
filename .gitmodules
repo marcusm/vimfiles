@@ -16,9 +16,6 @@
 [submodule "bundle/Rainbow-Prenthsis-Bundle"]
 	path = bundle/Rainbow-Prenthsis-Bundle
 	url = http://github.com/vim-scripts/Rainbow-Parenthsis-Bundle.git
-[submodule "bundle/Pydiction"]
-	path = bundle/Pydiction
-	url = http://github.com/vim-scripts/Pydiction.git
 [submodule "bundle/pydoc.vim"]
 	path = bundle/pydoc.vim
 	url = http://github.com/vim-scripts/pydoc.vim.git
