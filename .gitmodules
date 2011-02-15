@@ -43,12 +43,12 @@
 [submodule "bundle/ingretu"]
 	path = bundle/ingretu
 	url = git://github.com/gmarik/ingretu.git
-[submodule "python_ifold"]
-	path = python_ifold
-	url = git@github.com:marcusm/python_ifold.git
 [submodule "bundle/python_ifold"]
 	path = bundle/python_ifold
-	url = git@github.com:marcusm/python_ifold.git
+	url = https://marcusm@github.com/marcusm/python_ifold.git
 [submodule "bundle/supertab"]
 	path = bundle/supertab
 	url = git://github.com/ervandew/supertab.git
+[submodule "bundle/vim-indent-guides"]
+	path = bundle/vim-indent-guides
+	url = git://github.com/nathanaelkane/vim-indent-guides.git
