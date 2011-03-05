@@ -143,7 +143,7 @@ map <leader>w bcw
 "Fast editing of .vimrc
 "When .vimrc is edited, reload it
 if has("unix")
-    map <leader>e :e! ~/.gvimrc<cr>
+    map <leader>e :e! ~/.vimrc<cr>
     autocmd! bufwritepost .gvimrc source ~/.gvimrc
 else
     map <leader>e :e! ~/_vimrc<cr>
@@ -285,6 +285,10 @@ if has("autocmd")
     autocmd FileType build,xml,html vmap <C-o> <ESC>'<i<!--<ESC>o<ESC>'>o-->
     autocmd FileType java,c,cpp,cs,php vmap <C-o> <ESC>'<o/*<ESC>'>o*/
 
+    " Flex Development
+    au BufNewFile,BufRead *.mxml    		setfiletype mxml
+    au BufNewFile,BufRead *.as          	setfiletype actionscript
+    
     " Numbering 
     autocmd FileType build,xml,html,c,cs,java,perl,shell,bash,cpp,python,vim,php,magpie set number
 
