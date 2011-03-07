@@ -22,9 +22,6 @@
 [submodule "bundle/Command-T"]
 	path = bundle/Command-T
 	url = http://github.com/vim-scripts/Command-T.git
-[submodule "bundle/0scan"]
-	path = bundle/0scan
-	url = http://github.com/vim-scripts/0scan.git
 [submodule "bundle/pythonhelper"]
 	path = bundle/pythonhelper
 	url = http://github.com/vim-scripts/pythonhelper.git
