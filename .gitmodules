@@ -52,3 +52,9 @@
 [submodule "bundle/debugger"]
 	path = bundle/debugger
 	url = https://github.com/ornicar/vim-php-debugger.git
+[submodule "bundle/align"]
+	path = bundle/align
+	url = https://github.com/tsaleh/vim-align.git
+[submodule "bundle/matchit"]
+	path = bundle/matchit
+	url = https://github.com/tsaleh/vim-matchit.git
