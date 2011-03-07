@@ -143,7 +143,7 @@ map <leader>w bcw
 "Fast editing of .vimrc
 "When .vimrc is edited, reload it
 if has("unix")
-    map <leader>e :e! ~/.gvimrc<cr>
+    map <leader>e :e! ~/.vimrc<cr>
     autocmd! bufwritepost .gvimrc source ~/.gvimrc
 else
     map <leader>e :e! ~/_vimrc<cr>
@@ -285,6 +285,10 @@ if has("autocmd")
     autocmd FileType build,xml,html vmap <C-o> <ESC>'<i<!--<ESC>o<ESC>'>o-->
     autocmd FileType java,c,cpp,cs,php vmap <C-o> <ESC>'<o/*<ESC>'>o*/
 
+    " Flex Development
+    au BufNewFile,BufRead *.mxml    		setfiletype mxml
+    au BufNewFile,BufRead *.as          	setfiletype actionscript
+    
     " Numbering 
     autocmd FileType build,xml,html,c,cs,java,perl,shell,bash,cpp,python,vim,php,magpie set number
 
@@ -321,10 +325,6 @@ endif " has("autocmd")
 :set completeopt=longest,menuone
 
 "The above command will change the 'completeopt' option so that Vim's popup menu doesn't select the first completion item, but rather just inserts the longest common text of all matches; and the menu will come up even if there's only one match. (The longest setting is responsible for the former effect and the menuone is responsible for the latter.) 
-
-:inoremap <expr> <cr> pumvisible() ? "\<c-y>" : "\<c-g>u\<cr>" 
-:inoremap <expr> <c-n> pumvisible() ? "\<lt>c-n>" : "\<lt>c-n>\<lt>c-r>=pumvisible() ? \"\\<lt>down>\" : \"\"\<lt>cr>"
-:inoremap <expr> <m-;> pumvisible() ? "\<lt>c-n>" : "\<lt>c-x>\<lt>c-o>\<lt>c-n>\<lt>c-p>\<lt>c-r>=pumvisible() ? \"\\<lt>down>\" : \"\"\<lt>cr>" 
 
 " ***********************************************************************
 

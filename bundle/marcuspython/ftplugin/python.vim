@@ -8,4 +8,8 @@ setlocal nosmartindent
 
 " Execute file being edited with <Shift> + e:
 " map <buffer> <S-e> :w<CR>:!/usr/bin/env python % <CR>
-map <buffer> <S-e> :w<CR>:!C:/Python27/Python.exe % <CR>
+if has("unix")
+    map <buffer> <S-e> :w<CR>:!python % <CR>
+else
+    map <buffer> <S-e> :w<CR>:!C:/Python27/Python.exe % <CR>
+endif
