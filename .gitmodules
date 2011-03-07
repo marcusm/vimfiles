@@ -52,3 +52,6 @@
 [submodule "bundle/vim-indent-guides"]
 	path = bundle/vim-indent-guides
 	url = git://github.com/nathanaelkane/vim-indent-guides.git
+[submodule "bundle/debugger"]
+	path = bundle/debugger
+	url = https://github.com/ornicar/vim-php-debugger.git
