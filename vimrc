@@ -276,7 +276,7 @@ if has("autocmd")
     autocmd BufRead,BufNewfile *.py set ai
 
     " For all text files set 'textwidth' to 100 characters. More comment here.
-    autocmd FileType html,text,php,vim,c,java,xml,bash,magpie,shell,perl,php,python setlocal textwidth=100
+    autocmd FileType html,text,vim,c,java,xml,bash,magpie,shell,perl,php,python setlocal textwidth=100
 
     autocmd BufRead,BufNewfile *.build set filetype=xml
     autocmd BufRead,BufNewfile *.mag set filetype=magpie
@@ -358,3 +358,5 @@ else
     " Support for pydoc
     let g:pydoc_cmd = "C:/Python27/Lib/pydoc.py"
 endif
+
+let g:SuperTabDefaultCompletionType = "context"

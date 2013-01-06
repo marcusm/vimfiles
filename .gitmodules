@@ -58,3 +58,6 @@
 [submodule "bundle/matchit"]
 	path = bundle/matchit
 	url = https://github.com/tsaleh/vim-matchit.git
+[submodule "bundle/go.vim"]
+	path = bundle/go.vim
+	url = https://github.com/fsouza/go.vim.git
