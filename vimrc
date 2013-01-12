@@ -39,7 +39,7 @@ set backspace=indent,eol,start
 set history=500
 set spell
 set showmode
-colorscheme ingretu 
+colorscheme solarized 
 
 "cursor colors
 highlight cursor        cterm=bold
