@@ -13,9 +13,6 @@
 [submodule "bundle/genutils"]
 	path = bundle/genutils
 	url = http://github.com/vim-scripts/genutils.git
-[submodule "bundle/Rainbow-Prenthsis-Bundle"]
-	path = bundle/Rainbow-Prenthsis-Bundle
-	url = http://github.com/vim-scripts/Rainbow-Parenthsis-Bundle.git
 [submodule "bundle/pydoc.vim"]
 	path = bundle/pydoc.vim
 	url = http://github.com/vim-scripts/pydoc.vim.git
@@ -61,3 +58,15 @@
 [submodule "bundle/go.vim"]
 	path = bundle/go.vim
 	url = https://github.com/fsouza/go.vim.git
+[submodule "bundle/vim-clojure-static"]
+	path = bundle/vim-clojure-static
+	url = https://github.com/guns/vim-clojure-static.git
+[submodule "bundle/rainbow_parentheses"]
+	path = bundle/rainbow_parentheses
+	url = https://github.com/kien/rainbow_parentheses.vim.git
+[submodule "bundle/foreplay"]
+	path = bundle/foreplay
+	url = git://github.com/tpope/vim-foreplay.git
+[submodule "bundle/classpath"]
+	path = bundle/classpath
+	url = git://github.com/tpope/vim-classpath.git

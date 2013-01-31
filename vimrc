@@ -39,6 +39,7 @@ set backspace=indent,eol,start
 set history=500
 set spell
 set showmode
+"set bg=dark
 colorscheme solarized 
 
 "cursor colors
