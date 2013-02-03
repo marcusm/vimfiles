@@ -24,7 +24,7 @@ set nocompatible
 
 " Setup pathogen before loading any other plugins
 filetype off
-call pathogen#runtime_append_all_bundles() 
+call pathogen#infect() 
 call pathogen#helptags()
 filetype on
 
@@ -35,11 +35,10 @@ filetype on
 let mapleader = ","
 let g:mapleader = ","
 
-set backspace=indent,eol,start
 set history=500
 set spell
 set showmode
-"set bg=dark
+set bg=dark
 colorscheme solarized 
 
 "cursor colors
@@ -48,18 +47,11 @@ highlight cursor        cterm=bold
 set cursorline
 
 set mousemodel=extend
-set autoread
 set shellslash
-set ruler
-set showcmd
-set incsearch
-set showmatch
 set hidden 
 set mouse=a
 set hlsearch
-set smarttab
 set cindent
-set autoindent
 set smartcase   " Turn off ignorecase in a typed search if an uppercase char exists.
 set ignorecase  " Turn off ignorecase in a typed search if an uppercase char exists.
 set shm+=I      " No start up message
@@ -185,50 +177,6 @@ noremap <silent> <F12> :TlistToggle<CR>
 vnoremap <silent> <F12> <C-C>:TlistToggle<CR>
 inoremap <silent> <F12> <C-O>:TlistToggle<CR>
 
-
-" ------------------------------------------------
-" Setup backup and swap directory management
-" ------------------------------------------------
-if !exists("*InitBackupDir")
-    function InitBackupDir()
-        let separator = "."
-        let backup = g:vimfiles_path . separator . 'backup/'
-        let tmp    = g:vimfiles_path . separator . 'tmp/'
-        
-        if exists("*mkdir")
-            if !isdirectory(backup)
-                call mkdir(backup)
-            endif
-            if !isdirectory(tmp)
-                call mkdir(tmp)
-            endif
-        endif
-
-        let missing_dir = 0
-        if isdirectory(tmp)
-            execute 'set backupdir=' . escape(backup, " ") . "/,."
-        else
-            let missing_dir = 1
-        endif
-
-        if isdirectory(backup)
-            execute 'set directory=' . escape(tmp, " ") . "/,."
-        else
-            let missing_dir = 1
-        endif
-        
-        if missing_dir
-            echo "Warning: Unable to create backup directories: " 
-            . backup ." and " . tmp
-            echo "Try: mkdir -p " . backup
-            echo "and: mkdir -p " . tmp
-            set backupdir=.                 
-            set directory=.
-        endif
-    endfunction        
-endif
-call InitBackupDir()
-
 " ------------------------------------------------
 " Setup specific plugins
 " ------------------------------------------------
@@ -247,9 +195,6 @@ set wildmenu
 set wildmode=list:longest,full 
 
 syntax on
-
-set laststatus=2
-
 
 " Add highlighting for function definition in C++
 function! EnhanceCppSyntax()
