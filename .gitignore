@@ -1,4 +1,3 @@
 # ignore the backup and tmp directories
-.backup/*
-.tmp/*
 tags
+autoload/pathogen.vim
