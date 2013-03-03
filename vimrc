@@ -78,6 +78,7 @@ set shiftwidth=4
 set expandtab
 set foldmethod=indent nofoldenable
 
+
 " set verbosefile=~.vimlog
 " set verbose=15
 "Bbackspace and cursor keys wrap to
@@ -236,7 +237,7 @@ if has("autocmd")
     au BufNewFile,BufRead *.as          	setfiletype actionscript
     
     " Numbering 
-    autocmd FileType build,xml,html,c,cs,java,perl,shell,bash,cpp,python,vim,php,magpie set number
+    autocmd FileType build,xml,html,c,cs,css,js,scss,java,perl,shell,bash,cpp,python,vim,php,magpie set number
 
     "PHP parser check
     :autocmd FileType php noremap <C-L> :!/usr/bin/php -l %<CR>
@@ -306,3 +307,10 @@ else
 endif
 
 let g:SuperTabDefaultCompletionType = "context"
+
+
+" setup to make sure powerline looks right
+set encoding=utf-8
+set fillchars+=stl:\ ,stlnc:\
+
+python from powerline.bindings.vim import source_plugin; source_plugin()
