@@ -1,9 +1,6 @@
 [submodule "bundle/pathogen"]
 	path = bundle/pathogen
 	url = http://github.com/vim-scripts/pathogen.vim.git
-[submodule "bundle/snipmate"]
-	path = bundle/snipmate
-	url = http://github.com/gmarik/snipmate.vim.git
 [submodule "bundle/surround"]
 	path = bundle/surround
 	url = http://github.com/vim-scripts/surround.vim.git
@@ -46,12 +43,6 @@
 [submodule "bundle/vim-indent-guides"]
 	path = bundle/vim-indent-guides
 	url = git://github.com/nathanaelkane/vim-indent-guides.git
-[submodule "bundle/debugger"]
-	path = bundle/debugger
-	url = https://github.com/ornicar/vim-php-debugger.git
-[submodule "bundle/align"]
-	path = bundle/align
-	url = https://github.com/tsaleh/vim-align.git
 [submodule "bundle/matchit"]
 	path = bundle/matchit
 	url = https://github.com/tsaleh/vim-matchit.git
@@ -91,6 +82,3 @@
 [submodule "bundle/css-color"]
 	path = bundle/css-color
 	url = https://github.com/skammer/vim-css-color.git
-[submodule "bundle/vim-ragtag"]
-	path = bundle/vim-ragtag
-	url = https://github.com/tpope/vim-ragtag.git
