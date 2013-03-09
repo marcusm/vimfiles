@@ -1,60 +1,30 @@
 [submodule "bundle/pathogen"]
 	path = bundle/pathogen
 	url = http://github.com/vim-scripts/pathogen.vim.git
-[submodule "bundle/surround"]
-	path = bundle/surround
-	url = http://github.com/vim-scripts/surround.vim.git
-[submodule "bundle/cescope"]
-	path = bundle/cescope
-	url = http://github.com/vim-scripts/cecscope.git
-[submodule "bundle/genutils"]
-	path = bundle/genutils
-	url = http://github.com/vim-scripts/genutils.git
-[submodule "bundle/pydoc.vim"]
-	path = bundle/pydoc.vim
-	url = http://github.com/vim-scripts/pydoc.vim.git
-[submodule "bundle/Command-T"]
-	path = bundle/Command-T
-	url = http://github.com/vim-scripts/Command-T.git
 [submodule "bundle/pythonhelper"]
 	path = bundle/pythonhelper
 	url = http://github.com/vim-scripts/pythonhelper.git
 [submodule "bundle/nerdcommenter"]
 	path = bundle/nerdcommenter
 	url = http://github.com/scrooloose/nerdcommenter.git
-[submodule "bundle/phpcomplete.vim"]
-	path = bundle/phpcomplete.vim
-	url = https://github.com/shawncplus/phpcomplete.vim.git
 [submodule "bundle/vim-git.git"]
 	path = bundle/vim-git.git
 	url = https://github.com/tpope/vim-git.git
-[submodule "bundle/vim-fugitive.git"]
-	path = bundle/vim-fugitive.git
-	url = https://github.com/tpope/vim-fugitive.git
 [submodule "bundle/ingretu"]
 	path = bundle/ingretu
 	url = git://github.com/gmarik/ingretu.git
 [submodule "bundle/python_ifold"]
 	path = bundle/python_ifold
 	url = https://marcusm@github.com/marcusm/python_ifold.git
-[submodule "bundle/supertab"]
-	path = bundle/supertab
-	url = git://github.com/ervandew/supertab.git
 [submodule "bundle/vim-indent-guides"]
 	path = bundle/vim-indent-guides
 	url = git://github.com/nathanaelkane/vim-indent-guides.git
 [submodule "bundle/matchit"]
 	path = bundle/matchit
 	url = https://github.com/tsaleh/vim-matchit.git
-[submodule "bundle/go.vim"]
-	path = bundle/go.vim
-	url = https://github.com/fsouza/go.vim.git
 [submodule "bundle/vim-clojure-static"]
 	path = bundle/vim-clojure-static
 	url = https://github.com/guns/vim-clojure-static.git
-[submodule "bundle/rainbow_parentheses"]
-	path = bundle/rainbow_parentheses
-	url = https://github.com/kien/rainbow_parentheses.vim.git
 [submodule "bundle/foreplay"]
 	path = bundle/foreplay
 	url = git://github.com/tpope/vim-foreplay.git
@@ -70,15 +40,6 @@
 [submodule "bundle/tabular"]
 	path = bundle/tabular
 	url = https://github.com/godlygeek/tabular
-[submodule "bundle/javascript"]
-	path = bundle/javascript
-	url = https://github.com/pangloss/vim-javascript.git
-[submodule "bundle/scss-syntax"]
-	path = bundle/scss-syntax
-	url = https://github.com/cakebaker/scss-syntax.vim.git
 [submodule "bundle/css3-syntax"]
 	path = bundle/css3-syntax
 	url = https://github.com/hail2u/vim-css3-syntax.git
-[submodule "bundle/css-color"]
-	path = bundle/css-color
-	url = https://github.com/skammer/vim-css-color.git
