@@ -1,21 +1,11 @@
-" Variables to modify
-" -------------------------------------------
-
-if has('win32')
-    let g:vimfiles_path = fnamemodify($HOME.'/vimfiles', ':p')
-    let g:vimrc_path    = fnamemodify($HOME.'/_vimrc', ':p')
-else
-    let g:vimfiles_path = fnamemodify('~/.vim', ':p')
-    let g:vimrc_path    = fnamemodify('~/.vim/.vimrc', ':p')
-endif
-let g:user_name  = "Marcus Martin"
-let g:user_email = "nymaen@gmail.com"
-let s:baseline_vim_path=""
-let g:pythonpath_fixtures= [ g:vimfiles_path . '/python',
-              \              g:vimfiles_path . '/after/ftplugin/python/pyflakes' ]
-
 " This needs to be set prior to loading any plugins
 set nocompatible
+
+" Vundle and bundles configuration
+source bundles.vim
+
+" my configuration which depends on bundles
+set statusline=+'%<\ %f\ %{fugitive#statusline()}'
 
 "-------------------------------------------------------
 " Some general environment setup
@@ -77,7 +67,8 @@ if has("win32")
     " set the font to be consolas
     set guifont=Consolas:h9:cANSI
 else
-    set guifont=Liberation\ Mono\ 10
+    "set guifont=Liberation\ Mono\ 10
+    set guifont=Source\ Code\ Pro\ for\ Powerline:h12
 endif
 
 "try to make possible to navigate within lines of wrapped lines
@@ -221,10 +212,6 @@ if has("autocmd")
     autocmd FileType build,xml,html vmap <C-o> <ESC>'<i<!--<ESC>o<ESC>'>o-->
     autocmd FileType java,c,cpp,cs,php vmap <C-o> <ESC>'<o/*<ESC>'>o*/
 
-    " Flex Development
-    au BufNewFile,BufRead *.mxml    		setfiletype mxml
-    au BufNewFile,BufRead *.as          	setfiletype actionscript
-    
     " Numbering 
     autocmd FileType build,xml,html,c,cs,css,js,scss,java,perl,shell,bash,cpp,python,vim,php,magpie set number
 
@@ -274,32 +261,13 @@ map __ :buffers<BAR>
 			\let i = input("Buffer number: ")<BAR>
 			\execute "buffer " . i<CR> 
 
-
-
 let g:clj_highlight_builtins = 1
 let g:clj_highlight_contrib = 1
 let g:clj_paren_rainbow = 1
 let g:clj_want_gorilla = 1
 
-if has("unix")
-    " Support for Pydiction
-    let g:pydiction_location = '~/.vim/bundle/pydiction-1.2/ftplugin/pydiction/complete-dict' 
-
-    " Support for pydoc
-    let g:pydoc_cmd = "pydoc.py"
-else
-    " Support for Pydiction
-    let g:pydiction_location = 'C:/Users/Marcus Martin/vimfiles/bundle/Pydiction/complete-dict' 
-
-    " Support for pydoc
-    let g:pydoc_cmd = "C:/Python27/Lib/pydoc.py"
-endif
-
 let g:SuperTabDefaultCompletionType = "context"
-
 
 " setup to make sure powerline looks right
 set encoding=utf-8
 set fillchars+=stl:\ ,stlnc:\
-
-python from powerline.bindings.vim import source_plugin; source_plugin()
