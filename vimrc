@@ -1,8 +1,20 @@
+if has('win32')
+    let g:vimfiles_path = fnamemodify($HOME.'/vimfiles', ':p')
+    let g:vimrc_path    = fnamemodify($HOME.'/_vimrc', ':p')
+else
+    let g:vimfiles_path = fnamemodify('~/.vim', ':p')
+    let g:vimrc_path    = fnamemodify('~/.vim/.vimrc', ':p')
+endif
+
 " This needs to be set prior to loading any plugins
 set nocompatible
 
 " Vundle and bundles configuration
-source bundles.vim
+if has('win32')
+    source $HOME/vimfiles/bundles.vim
+else
+    source $HOME/.vim/bundles.vim
+end
 
 " my configuration which depends on bundles
 set statusline=+'%<\ %f\ %{fugitive#statusline()}'

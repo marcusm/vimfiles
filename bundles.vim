@@ -1,14 +1,6 @@
 set nocompatible               " be iMproved
 filetype off                   " required!
 
-if has('win32')
-    let g:vimfiles_path = fnamemodify($HOME.'/vimfiles', ':p')
-    let g:vimrc_path    = fnamemodify($HOME.'/_vimrc', ':p')
-else
-    let g:vimfiles_path = fnamemodify('~/.vim', ':p')
-    let g:vimrc_path    = fnamemodify('~/.vim/.vimrc', ':p')
-endif
-
 let vundleAlreadyExists=1
 let vundle_readme=expand(g:vimfiles_path . 'bundle/vundle/README.md')
 if !filereadable(vundle_readme)
@@ -22,7 +14,7 @@ if !filereadable(vundle_readme)
 endif
 
 if has('win32') || has('win64')
-  set runtimepath=$HOME/.vim,$VIM/vimfiles,$VIMRUNTIME,$VIM/vimfiles/after,$HOME/.vim/after
+  set rtp+=$HOME/vimfiles/bundle/vundle/
 else
   set rtp+=$HOME/.vim/bundle/vundle/
 endif
