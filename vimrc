@@ -1,112 +1,11 @@
-" Variables to modify
-" -------------------------------------------
-
-if has('win32')
-    let g:vimfiles_path = fnamemodify($HOME.'/vimfiles', ':p')
-    let g:vimrc_path    = fnamemodify($HOME.'/_vimrc', ':p')
-else
-    let g:vimfiles_path = fnamemodify('~/.vim', ':p')
-    let g:vimrc_path    = fnamemodify('~/.vim/.vimrc', ':p')
-endif
-let g:user_name  = "Marcus Martin"
-let g:user_email = "nymaen@gmail.com"
-let s:baseline_vim_path=""
-let g:pythonpath_fixtures= [ g:vimfiles_path . '/python',
-              \              g:vimfiles_path . '/after/ftplugin/python/pyflakes' ]
-
-" For overriding these settings or adding sensitive data (such as github
-" token):
-let s:local_vimrc = fnamemodify('~/.vimrc_local', ':p')
-
 " This needs to be set prior to loading any plugins
 set nocompatible
 
-" put this line first in ~/.vimrc
-set nocompatible | filetype indent plugin on | syn on
+" Vundle and bundles configuration
+source bundles.vim
 
-fun! EnsureVamIsOnDisk(plugin_root_dir)
-    " windows users may want to use http://mawercer.de/~marc/vam/index.php
-    " to fetch VAM, VAM-known-repositories and the listed plugins
-    " without having to install curl, 7-zip and git tools first
-    " -> BUG [4] (git-less installation)
-    let vam_autoload_dir = a:plugin_root_dir.'/vim-addon-manager/autoload'
-    if isdirectory(vam_autoload_dir)
-    return 1
-    else
-    if 1 == confirm("Clone VAM into ".a:plugin_root_dir."?","&Y\n&N")
-        " I'm sorry having to add this reminder. Eventually it'll pay off.
-        call confirm("Remind yourself that most plugins ship with ".
-                    \"documentation (README*, doc/*.txt). It is your ".
-                    \"first source of knowledge. If you can't find ".
-                    \"the info you're looking for in reasonable ".
-                    \"time ask maintainers to improve documentation")
-        call mkdir(a:plugin_root_dir, 'p')
-        execute '!git clone --depth=1 git://github.com/MarcWeber/vim-addon-manager '.
-                    \       shellescape(a:plugin_root_dir, 1).'/vim-addon-manager'
-        " VAM runs helptags automatically when you install or update 
-        " plugins
-        exec 'helptags '.fnameescape(a:plugin_root_dir.'/vim-addon-manager/doc')
-    endif
-    return isdirectory(vam_autoload_dir)
-    endif
-endfun
-
-
-fun! SetupVAM()
-    " Set advanced options like this:
-    " let g:vim_addon_manager = {}
-    " let g:vim_addon_manager.key = value
-    "     Pipe all output into a buffer which gets written to disk
-    " let g:vim_addon_manager.log_to_buf =1
-
-    " Example: drop git sources unless git is in PATH. Same plugins can
-    " be installed from www.vim.org. Lookup MergeSources to get more control
-    " let g:vim_addon_manager.drop_git_sources = !executable('git')
-    " let g:vim_addon_manager.debug_activation = 1
-    " VAM install location:
-    let c = get(g:, 'vim_addon_manager', {})
-    let g:vim_addon_manager = c
-    let c.plugin_root_dir = expand('$HOME/.vim/vim-addons')
-    if !EnsureVamIsOnDisk(c.plugin_root_dir)
-    echohl ErrorMsg | echomsg "No VAM found!" | echohl NONE
-    return
-    endif
-    let &rtp.=(empty(&rtp)?'':',').c.plugin_root_dir.'/vim-addon-manager'
-
-    " Tell VAM which plugins to fetch & load:
-    call vam#ActivateAddons(['SuperTab%1643','surround','cecscope','css_color','genutils','go%2854','javascript%2083', 'phpcomplete','rainbow_parentheses','scss-syntax','UltiSnips','fugitive',], {'auto_install' : 0})
-    " sample: call vam#ActivateAddons(['pluginA','pluginB', ...], {'auto_install' : 0})
-
-    " Addons are put into plugin_root_dir/plugin-name directory
-    " unless those directories exist. Then they are activated.
-    " Activating means adding addon dirs to rtp and do some additional
-    " magic
-
-    " How to find addon names?
-    " - look up source from pool
-    " - (<c-x><c-p> complete plugin names):
-    " You can use name rewritings to point to sources:
-    "    ..ActivateAddons(["github:foo", .. => github://foo/vim-addon-foo
-    "    ..ActivateAddons(["github:user/repo", .. => github://user/repo
-    " Also see section "2.2. names of addons and addon sources" in VAM's documentation
-endfun
-call SetupVAM()
-" experimental [E1]: load plugins lazily depending on filetype, See
-" NOTES
-" experimental [E2]: run after gui has been started (gvim) [3]
-" option1:  au VimEnter * call SetupVAM()
-" option2:  au GUIEnter * call SetupVAM()
-" See BUGS sections below [*]
-" Vim 7.0 users see BUGS section [3]
-
-
-
-" Setup pathogen before loading any other plugins
-python import sys; sys.path.append("/usr/local/lib/python2.7/site-packages/")                   
-filetype off
-call pathogen#infect() 
-call pathogen#helptags()
-filetype on
+" my configuration which depends on bundles
+set statusline=+'%<\ %f\ %{fugitive#statusline()}'
 
 "-------------------------------------------------------
 " Some general environment setup
@@ -168,7 +67,8 @@ if has("win32")
     " set the font to be consolas
     set guifont=Consolas:h9:cANSI
 else
-    set guifont=Liberation\ Mono\ 10
+    "set guifont=Liberation\ Mono\ 10
+    set guifont=Source\ Code\ Pro\ for\ Powerline:h12
 endif
 
 "try to make possible to navigate within lines of wrapped lines
@@ -312,10 +212,6 @@ if has("autocmd")
     autocmd FileType build,xml,html vmap <C-o> <ESC>'<i<!--<ESC>o<ESC>'>o-->
     autocmd FileType java,c,cpp,cs,php vmap <C-o> <ESC>'<o/*<ESC>'>o*/
 
-    " Flex Development
-    au BufNewFile,BufRead *.mxml    		setfiletype mxml
-    au BufNewFile,BufRead *.as          	setfiletype actionscript
-    
     " Numbering 
     autocmd FileType build,xml,html,c,cs,css,js,scss,java,perl,shell,bash,cpp,python,vim,php,magpie set number
 
@@ -365,26 +261,10 @@ map __ :buffers<BAR>
 			\let i = input("Buffer number: ")<BAR>
 			\execute "buffer " . i<CR> 
 
-
-
 let g:clj_highlight_builtins = 1
 let g:clj_highlight_contrib = 1
 let g:clj_paren_rainbow = 1
 let g:clj_want_gorilla = 1
-
-if has("unix")
-    " Support for Pydiction
-    let g:pydiction_location = '~/.vim/bundle/pydiction-1.2/ftplugin/pydiction/complete-dict' 
-
-    " Support for pydoc
-    let g:pydoc_cmd = "pydoc.py"
-else
-    " Support for Pydiction
-    let g:pydiction_location = 'C:/Users/Marcus Martin/vimfiles/bundle/Pydiction/complete-dict' 
-
-    " Support for pydoc
-    let g:pydoc_cmd = "C:/Python27/Lib/pydoc.py"
-endif
 
 let g:SuperTabDefaultCompletionType = "context"
 
@@ -392,3 +272,7 @@ au VimEnter * RainbowParenthesesToggle
 au Syntax * RainbowParenthesesLoadRound
 au Syntax * RainbowParenthesesLoadSquare
 au Syntax * RainbowParenthesesLoadBraces
+
+" setup to make sure powerline looks right
+set encoding=utf-8
+set fillchars+=stl:\ ,stlnc:\
