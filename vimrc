@@ -268,10 +268,11 @@ let g:clj_want_gorilla = 1
 
 let g:SuperTabDefaultCompletionType = "context"
 
-au VimEnter * RainbowParenthesesToggle
-au Syntax * RainbowParenthesesLoadRound
-au Syntax * RainbowParenthesesLoadSquare
-au Syntax * RainbowParenthesesLoadBraces
+ if exists("g:btm_rainbow_color") && g:btm_rainbow_color
+    call rainbow_parenthsis#LoadSquare ()
+    call rainbow_parenthsis#LoadRound ()
+    call rainbow_parenthsis#Activate ()
+ endif
 
 " setup to make sure powerline looks right
 set encoding=utf-8
