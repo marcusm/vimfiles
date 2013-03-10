@@ -8,8 +8,6 @@ else
     let g:vimfiles_path = fnamemodify('~/.vim', ':p')
     let g:vimrc_path    = fnamemodify('~/.vim/.vimrc', ':p')
 endif
-let g:user_name  = "Marcus Martin"
-let g:user_email = "nymaen@gmail.com"
 
 let vundleAlreadyExists=1
 let vundle_readme=expand(g:vimfiles_path . 'bundle/vundle/README.md')
