@@ -38,6 +38,7 @@ Bundle 'Indent-Guides'
 Bundle 'git://github.com/tpope/vim-sensible.git'
 Bundle 'git://github.com/Lokaltog/powerline.git'
 Bundle 'Rainbow-Parenthsis-Bundle'
+Bundle 'surround.vim'
 
 " clojure
 Bundle 'git://github.com/tpope/vim-classpath.git'
