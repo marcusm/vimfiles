@@ -289,3 +289,6 @@ let g:SuperTabDefaultCompletionType = "context"
 " setup to make sure powerline looks right
 set encoding=utf-8
 set fillchars+=stl:\ ,stlnc:\
+
+" setup SuperTab
+let g:SuperTabDefaultCompletionType = "context"
