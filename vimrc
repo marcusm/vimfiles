@@ -19,6 +19,16 @@ set nocompatible
 " put this line first in ~/.vimrc
 set nocompatible | filetype indent plugin on | syn on
 
+fun! MyGitCheckout(repository, targetDir)
+	 let a:repository.url = substitute(a:repository.url, '^git://github', 'http://github', '')
+	 return vam#utils#RunShell('git clone --depth=1 $.url $p', a:repository, a:targetDir)
+endfun
+
+fun MyPluginDirFromName(name)
+  let dir = vam#DefaultPluginDirFromName(a:name)
+  return substitute(dir,'%','_', 'g')
+endf
+
 fun! EnsureVamIsOnDisk(plugin_root_dir)
     " windows users may want to use http://mawercer.de/~marc/vam/index.php
     " to fetch VAM, VAM-known-repositories and the listed plugins
@@ -57,22 +67,31 @@ fun! SetupVAM()
     " be installed from www.vim.org. Lookup MergeSources to get more control
     " let g:vim_addon_manager.drop_git_sources = !executable('git')
     " let g:vim_addon_manager.debug_activation = 1
-
     " VAM install location:
-    let c = get(g:, 'vim_addon_manager', {})
+    let c = get(g:, 'vim_addon_manager', {'scms': {'git': {}}})
     let g:vim_addon_manager = c
     let g:vim_addon_manager.drop_git_sources = !executable('git')
-    let g:vim_addon_manager.debug_activation = 1
-
-    let c.plugin_root_dir = expand('$HOME/.vim/vim-addons')
+    " let g:vim_addon_manager.debug_activation = 1
+	let g:vim_addon_manager.log_to_buf =1
+	let g:vim_addon_manager.auto_install =1
+	" let g:vim_addon_manager.shell_commands_run_method = system
+	let g:vim_addon_manager.log_buffer_name = expand('$HOME/.vam_log')
+	
+    let g:vim_addon_manager.scms.git.clone=['MyGitCheckout']
+    let g:vim_addon_manager['plugin_dir_by_name'] = 'MyPluginDirFromName'
+	
+    " let c.plugin_root_dir = expand('$HOME/.vim/vim-addons')
+    let c.plugin_root_dir = expand('$HOME/vimfiles/vim-addons')
+	
     if !EnsureVamIsOnDisk(c.plugin_root_dir)
         echohl ErrorMsg | echomsg "No VAM found!" | echohl NONE
         return
     endif
+	
     let &rtp.=(empty(&rtp)?'':',').c.plugin_root_dir.'/vim-addon-manager'
 
     " Tell VAM which plugins to fetch & load:
-    call vam#ActivateAddons(['SuperTab%1643','surround','cecscope','sensible','css_color','genutils','go%2854','javascript%2083', 'phpcomplete','rainbow_parentheses','powerline','scss-syntax','UltiSnips','fugitive','Solarized',], {'auto_install' : 1})
+        call vam#ActivateAddons(['SuperTab%1643','surround','cecscope','sensible','css_color','genutils','go%2854','javascript%2083', 'phpcomplete','rainbow_parentheses','powerline','scss-syntax','AutoComplPop', 'neocomplcache', 'neosnippet','fugitive','Solarized',], {'auto_install' : 1})
     call vam#ActivateAddons(['The_NERD_Commenter'], {'auto_install' : 1})
     " sample: call vam#ActivateAddons(['pluginA','pluginB', ...], {'auto_install' : 0})
 
@@ -123,7 +142,7 @@ highlight cursor        cterm=bold
 set cursorline
 
 set mousemodel=extend
-set shellslash
+" set shellslash
 set hidden 
 set mouse=a
 set hlsearch
@@ -376,5 +395,81 @@ set encoding=utf-8
 set fillchars+=stl:\ ,stlnc:\
 set rtp +=~/.vim/bundle/powerline/powerline/bindings/vim/
 
+
+
+
 " setup SuperTab
-let g:SuperTabDefaultCompletionType = "context"
+" let g:SuperTabDefaultCompletionType = "context"
+
+" Disable AutoComplPop. Comment out this line if AutoComplPop is not installed.
+let g:acp_enableAtStartup = 0
+" Launches neocomplcache automatically on vim startup.
+let g:neocomplcache_enable_at_startup = 1
+" Use smartcase.
+let g:neocomplcache_enable_smart_case = 1
+" Use camel case completion.
+let g:neocomplcache_enable_camel_case_completion = 1
+" Use underscore completion.
+let g:neocomplcache_enable_underbar_completion = 1
+" Sets minimum char length of syntax keyword.
+let g:neocomplcache_min_syntax_length = 3
+" buffer file name pattern that locks neocomplcache. e.g. ku.vim or fuzzyfinder 
+let g:neocomplcache_lock_buffer_name_pattern = '\*ku\*'
+
+" Define file-type dependent dictionaries.
+let g:neocomplcache_dictionary_filetype_lists = {
+    \ 'default' : '',
+    \ 'vimshell' : $HOME.'/.vimshell_hist',
+    \ 'scheme' : $HOME.'/.gosh_completions'
+    \ }
+
+" Define keyword, for minor languages
+if !exists('g:neocomplcache_keyword_patterns')
+  let g:neocomplcache_keyword_patterns = {}
+endif
+let g:neocomplcache_keyword_patterns['default'] = '\h\w*'
+
+" Plugin key-mappings.
+inoremap <expr><C-g>     neocomplcache#undo_completion()
+inoremap <expr><C-l>     neocomplcache#complete_common_string()
+
+" SuperTab like snippets behavior.
+"imap <expr><TAB> neocomplcache#sources#snippets_complete#expandable() ? "\<Plug>(neocomplcache_snippets_expand)" : pumvisible() ? "\<C-n>" : "\<TAB>"
+
+" Recommended key-mappings.
+" <CR>: close popup and save indent.
+inoremap <expr><CR>  neocomplcache#smart_close_popup() . "\<CR>"
+" <TAB>: completion.
+inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
+" <C-h>, <BS>: close popup and delete backword char.
+inoremap <expr><C-h> neocomplcache#smart_close_popup()."\<C-h>"
+inoremap <expr><BS> neocomplcache#smart_close_popup()."\<C-h>"
+inoremap <expr><C-y>  neocomplcache#close_popup()
+inoremap <expr><C-e>  neocomplcache#cancel_popup()
+
+" AutoComplPop like behavior.
+"let g:neocomplcache_enable_auto_select = 1
+
+" Shell like behavior(not recommended).
+"set completeopt+=longest
+"let g:neocomplcache_enable_auto_select = 1
+"let g:neocomplcache_disable_auto_complete = 1
+"inoremap <expr><TAB>  pumvisible() ? "\<Down>" : "\<TAB>"
+"inoremap <expr><CR>  neocomplcache#smart_close_popup() . "\<CR>"
+
+" Enable omni completion. Not required if they are already set elsewhere in .vimrc
+autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
+autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
+autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
+autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
+autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
+
+" Enable heavy omni completion, which require computational power and may stall the vim. 
+if !exists('g:neocomplcache_omni_patterns')
+  let g:neocomplcache_omni_patterns = {}
+endif
+let g:neocomplcache_omni_patterns.ruby = '[^. *\t]\.\w*\|\h\w*::'
+"autocmd FileType ruby setlocal omnifunc=rubycomplete#Complete
+let g:neocomplcache_omni_patterns.php = '[^. \t]->\h\w*\|\h\w*::'
+let g:neocomplcache_omni_patterns.c = '\%(\.\|->\)\h\w*'
+let g:neocomplcache_omni_patterns.cpp = '\h\w*\%(\.\|->\)\h\w*\|\h\w*::'
