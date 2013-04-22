@@ -71,10 +71,20 @@ fun! SetupVAM()
     endif
     let &rtp.=(empty(&rtp)?'':',').c.plugin_root_dir.'/vim-addon-manager'
 
-    " Tell VAM which plugins to fetch & load:
-    call vam#ActivateAddons(['SuperTab%1643','surround','cecscope','sensible','css_color','genutils','go%2854','javascript%2083', 'phpcomplete','rainbow_parentheses','powerline','scss-syntax','UltiSnips','fugitive','Solarized',], {'auto_install' : 1})
-    call vam#ActivateAddons(['The_NERD_Commenter'], {'auto_install' : 1})
-    " sample: call vam#ActivateAddons(['pluginA','pluginB', ...], {'auto_install' : 0})
+    " baseline...utilities required for other plugins
+    call vam#ActivateAddons(['sensible','genutils','vim-classpath'], {'auto_install' : 1})
+
+    " improved visuals, no or few commands
+    call vam#ActivateAddons(['rainbow_parentheses','powerline','Solarized'], {'auto_install' : 1})
+
+    " additional language support
+    call vam#ActivateAddons(['go%2854','vim-clojure-static','vim-fireplace','javascript%2083', 'phpcomplete',], {'auto_install' : 1})
+
+    " web programming
+    call vam#ActivateAddons(['css_color','scss-syntax','ZenCoding'], {'auto_install' : 1})
+    
+    " additional commands
+    call vam#ActivateAddons(['SuperTab%1643','UltiSnips','fugitive','surround','cecscope','The_NERD_Commenter'], {'auto_install' : 1})
 
     " Addons are put into plugin_root_dir/plugin-name directory
     " unless those directories exist. Then they are activated.
