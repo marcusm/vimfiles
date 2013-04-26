@@ -91,7 +91,7 @@ fun! SetupVAM()
     let &rtp.=(empty(&rtp)?'':',').c.plugin_root_dir.'/vim-addon-manager'
 
     " Tell VAM which plugins to fetch & load:
-        call vam#ActivateAddons(['SuperTab%1643','surround','cecscope','sensible','css_color','genutils','go%2854','javascript%2083', 'phpcomplete','rainbow_parentheses','powerline','scss-syntax','AutoComplPop', 'neocomplcache', 'neosnippet','fugitive','Solarized',], {'auto_install' : 1})
+        call vam#ActivateAddons(['SuperTab%1643','surround','cecscope','sensible','css_color','genutils','go%2854','javascript%2083', 'phpcomplete','rainbow_parentheses','scss-syntax','AutoComplPop', 'neocomplcache', 'neosnippet','fugitive','Solarized',], {'auto_install' : 1})
     call vam#ActivateAddons(['The_NERD_Commenter'], {'auto_install' : 1})
     " sample: call vam#ActivateAddons(['pluginA','pluginB', ...], {'auto_install' : 0})
 
