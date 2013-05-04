@@ -75,7 +75,7 @@ fun! SetupVAM()
     call vam#ActivateAddons(['sensible','genutils','vim-classpath'], {'auto_install' : 1})
 
     " improved visuals, no or few commands
-    call vam#ActivateAddons(['rainbow_parentheses','powerline','Solarized'], {'auto_install' : 1})
+    call vam#ActivateAddons(['rainbow_parentheses','powerline','Solarized','surround'], {'auto_install' : 1})
 
     " additional language support
     call vam#ActivateAddons(['go%2854','vim-clojure-static','vim-fireplace','javascript%2083', 'phpcomplete',], {'auto_install' : 1})
@@ -84,7 +84,7 @@ fun! SetupVAM()
     call vam#ActivateAddons(['css_color','scss-syntax','ZenCoding'], {'auto_install' : 1})
     
     " additional commands
-    call vam#ActivateAddons(['SuperTab%1643','UltiSnips','fugitive','surround','cecscope','The_NERD_Commenter'], {'auto_install' : 1})
+    call vam#ActivateAddons(['SuperTab%1643','UltiSnips','fugitive','surround', 'Tabular', 'cecscope','The_NERD_Commenter'], {'auto_install' : 1})
 
     " Addons are put into plugin_root_dir/plugin-name directory
     " unless those directories exist. Then they are activated.
