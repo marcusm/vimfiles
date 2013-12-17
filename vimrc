@@ -11,20 +11,20 @@ set nocompatible
 
 " Vundle and bundles configuration
 "if has('win32')
-    "source $HOME/vimfiles/bundles.vim
+"    source $HOME/vimfiles/bundles.vim
 "else
-    "source $HOME/.vim/bundles.vim
+"    source $HOME/.vim/bundles.vim
 "end
-"
+
 " put this line first in ~/.vimrc
 set nocompatible | filetype indent plugin on | syn on
 
 fun! MyGitCheckout(repository, targetDir)
-	 let a:repository.url = substitute(a:repository.url, '^git://github', 'http://github', '')
+	 let a:repository.url = substitute(a:repository.url, '^git://github', 'https://github', '')
 	 return vam#utils#RunShell('git clone --depth=1 $.url $p', a:repository, a:targetDir)
 endfun
 
-fun MyPluginDirFromName(name)
+fun! MyPluginDirFromName(name)
   let dir = vam#DefaultPluginDirFromName(a:name)
   return substitute(dir,'%','_', 'g')
 endf
@@ -80,8 +80,8 @@ fun! SetupVAM()
     let g:vim_addon_manager.scms.git.clone=['MyGitCheckout']
     let g:vim_addon_manager['plugin_dir_by_name'] = 'MyPluginDirFromName'
 	
-    let c.plugin_root_dir = expand('$HOME/.vim/vim-addons')
-    " let c.plugin_root_dir = expand('$HOME/vimfiles/vim-addons')
+    " let c.plugin_root_dir = expand('$HOME/.vim/vim-addons')
+    let c.plugin_root_dir = expand('$HOME/vimfiles/vim-addons')
 	
     if !EnsureVamIsOnDisk(c.plugin_root_dir)
         echohl ErrorMsg | echomsg "No VAM found!" | echohl NONE
@@ -92,21 +92,16 @@ fun! SetupVAM()
 
     " baseline...utilities required for other plugins
     call vam#ActivateAddons(['sensible','genutils','vim-classpath'], {'auto_install' : 1})
-
     " improved visuals, no or few commands
-    call vam#ActivateAddons(['rainbow_parentheses','powerline','Solarized'], {'auto_install' : 1})
-
+    call vam#ActivateAddons(['rainbow_parentheses','vim-airline','Solarized'], {'auto_install' : 1})
     " additional language support
     call vam#ActivateAddons(['go%2854','scss-syntax','vim-clojure-static','vim-fireplace','javascript%2083', 'phpcomplete',], {'auto_install' : 1})
-
     " web programming
-    call vam#ActivateAddons(['css_color','scss-syntax','ZenCoding'], {'auto_install' : 1})
-    
+    call vam#ActivateAddons(['css_color','scss-syntax','Emmet'], {'auto_install' : 1})
     " additional commands
     call vam#ActivateAddons(['fugitive','surround', 'Tabular', 'cecscope','The_NERD_Commenter'], {'auto_install' : 1})
-    " additional commands
-    call vam#ActivateAddons(['AutoComplPop','L9','neocomplcache','neosnippet'], {'auto_install' : 1})
-    
+    call vam#ActivateAddons(['AutoComplPop', 'L9'], {'auto_install' : 0})
+    call vam#ActivateAddons(['neocomplcache','neosnippet'], {'auto_install' : 1})
     " sample: call vam#ActivateAddons(['pluginA','pluginB', ...], {'auto_install' : 0})
 
     " Addons are put into plugin_root_dir/plugin-name directory
@@ -156,7 +151,7 @@ highlight cursor        cterm=bold
 set cursorline
 
 set mousemodel=extend
-" set shellslash
+set shellslash
 set hidden 
 set mouse=a
 set hlsearch
@@ -407,7 +402,7 @@ let g:SuperTabDefaultCompletionType = "context"
 " setup to make sure powerline looks right
 set encoding=utf-8
 set fillchars+=stl:\ ,stlnc:\
-set rtp +=~/.vim/bundle/powerline/powerline/bindings/vim/
+"set rtp +=~/.vim/bundle/powerline/powerline/bindings/vim/
 
 
 
@@ -487,3 +482,6 @@ let g:neocomplcache_omni_patterns.ruby = '[^. *\t]\.\w*\|\h\w*::'
 let g:neocomplcache_omni_patterns.php = '[^. \t]->\h\w*\|\h\w*::'
 let g:neocomplcache_omni_patterns.c = '\%(\.\|->\)\h\w*'
 let g:neocomplcache_omni_patterns.cpp = '\h\w*\%(\.\|->\)\h\w*\|\h\w*::'
+
+" Enable airline
+" let g:airline_powerline_fonts = 1
