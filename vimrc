@@ -334,7 +334,7 @@ if has("autocmd")
     autocmd BufRead,BufNewfile *.py set ai
 
     " For all text files set 'textwidth' to 100 characters. More comment here.
-    autocmd FileType html,text,vim,c,java,xml,bash,magpie,shell,perl,php,python setlocal textwidth=100
+    autocmd FileType html,text,vim,c,java,xml,bash,magpie,shell,perl,php,python,go setlocal textwidth=100
 
     autocmd BufRead,BufNewfile *.build set filetype=xml
     autocmd BufRead,BufNewfile *.mag set filetype=magpie
@@ -344,7 +344,7 @@ if has("autocmd")
     autocmd FileType java,c,cpp,cs,php vmap <C-o> <ESC>'<o/*<ESC>'>o*/
 
     " Numbering 
-    autocmd FileType build,xml,html,c,cs,css,js,scss,java,perl,shell,bash,cpp,python,vim,php,magpie set number
+    autocmd FileType build,xml,html,c,cs,css,js,javascript,scss,java,perl,shell,bash,cpp,python,vim,php,magpie,go set number
 
     "PHP parser check
     :autocmd FileType php noremap <C-L> :!/usr/bin/php -l %<CR>
@@ -463,7 +463,7 @@ inoremap <expr><C-y>  neocomplcache#close_popup()
 inoremap <expr><C-e>  neocomplcache#cancel_popup()
 
 " AutoComplPop like behavior.
-"let g:neocomplcache_enable_auto_select = 1
+let g:neocomplcache_enable_auto_select = 1
 
 " Shell like behavior(not recommended).
 "set completeopt+=longest
