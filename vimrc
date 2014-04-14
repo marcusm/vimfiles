@@ -71,17 +71,17 @@ fun! SetupVAM()
     let c = get(g:, 'vim_addon_manager', {'scms': {'git': {}}})
     let g:vim_addon_manager = c
     let g:vim_addon_manager.drop_git_sources = !executable('git')
-    " let g:vim_addon_manager.debug_activation = 1
-	let g:vim_addon_manager.log_to_buf =1
+    "let g:vim_addon_manager.debug_activation = 1
+    let g:vim_addon_manager.log_to_buf =1
 	let g:vim_addon_manager.auto_install =1
-	" let g:vim_addon_manager.shell_commands_run_method = system
+	"let g:vim_addon_manager.shell_commands_run_method = system
 	let g:vim_addon_manager.log_buffer_name = expand('$HOME/.vam_log')
 	
     let g:vim_addon_manager.scms.git.clone=['MyGitCheckout']
     let g:vim_addon_manager['plugin_dir_by_name'] = 'MyPluginDirFromName'
 	
-    " let c.plugin_root_dir = expand('$HOME/.vim/vim-addons')
-    let c.plugin_root_dir = expand('$HOME/vimfiles/vim-addons')
+     let c.plugin_root_dir = expand('$HOME/.vim/vim-addons')
+    "let c.plugin_root_dir = expand('$HOME/vimfiles/vim-addons')
 	
     if !EnsureVamIsOnDisk(c.plugin_root_dir)
         echohl ErrorMsg | echomsg "No VAM found!" | echohl NONE
@@ -95,11 +95,11 @@ fun! SetupVAM()
     " improved visuals, no or few commands
     call vam#ActivateAddons(['rainbow_parentheses','vim-airline','Solarized'], {'auto_install' : 1})
     " additional language support
-    call vam#ActivateAddons(['go%2854','scss-syntax','vim-clojure-static','vim-fireplace','javascript%2083', 'phpcomplete',], {'auto_install' : 1})
+    call vam#ActivateAddons(['github:/Blackrush/vim-gocode','scss-syntax','vim-clojure-static','vim-fireplace','javascript%2083', 'phpcomplete',], {'auto_install' : 1})
     " web programming
     call vam#ActivateAddons(['css_color','scss-syntax','Emmet'], {'auto_install' : 1})
     " additional commands
-    call vam#ActivateAddons(['fugitive','surround', 'Tabular', 'cecscope','The_NERD_Commenter'], {'auto_install' : 1})
+    call vam#ActivateAddons(['Syntastic','fugitive','surround', 'Tabular', 'cecscope','The_NERD_Commenter'], {'auto_install' : 1})
     call vam#ActivateAddons(['AutoComplPop', 'L9'], {'auto_install' : 0})
     call vam#ActivateAddons(['neocomplcache','neosnippet'], {'auto_install' : 1})
     " sample: call vam#ActivateAddons(['pluginA','pluginB', ...], {'auto_install' : 0})
@@ -220,10 +220,22 @@ set notagrelative
 " ------------------------------------------------
 " Setup some helper functions
 " ------------------------------------------------
+function! s:GoVet()
+    cexpr system("go vet " . shellescape(expand('%')))
+    copen
+endfunction
+command! GoVet :call s:GoVet()
+
+
+function! s:GoLint()
+    cexpr system("golint " . shellescape(expand('%')))
+    copen
+endfunction
+command! GoLint :call s:GoLint()
 
 " Force the write of a file with sudo permissions
 " if you forgot to sudo vim. Still prompted for
-" ths sudo passworf
+" ths sudo password
 if has ('unix')
     cmap w!! %!sudo tee > /dev/null %
 endif
