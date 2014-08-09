@@ -4,17 +4,12 @@ if has('win32')
 else
     let g:vimfiles_path = fnamemodify('~/.vim', ':p')
     let g:vimrc_path    = fnamemodify('~/.vim/.vimrc', ':p')
+    set backupdir=$HOME/.vim/backup
+    set directory=$HOME/.vim/swap
 endif
 
 " This needs to be set prior to loading any plugins
 set nocompatible
-
-" Vundle and bundles configuration
-"if has('win32')
-"    source $HOME/vimfiles/bundles.vim
-"else
-"    source $HOME/.vim/bundles.vim
-"end
 
 " put this line first in ~/.vimrc
 set nocompatible | filetype indent plugin on | syn on
@@ -93,14 +88,17 @@ fun! SetupVAM()
     " baseline...utilities required for other plugins
     call vam#ActivateAddons(['sensible','genutils','vim-classpath'], {'auto_install' : 1})
     " improved visuals, no or few commands
-    call vam#ActivateAddons(['rainbow_parentheses','vim-airline','Solarized'], {'auto_install' : 1})
+    call vam#ActivateAddons(['Rainbow_Parentheses_Improved','vim-airline','Solarized'], {'auto_install' : 1})
     " additional language support
     call vam#ActivateAddons(['github:/Blackrush/vim-gocode','scss-syntax','vim-clojure-static','vim-fireplace','javascript%2083', 'phpcomplete',], {'auto_install' : 1})
     " web programming
     call vam#ActivateAddons(['css_color','scss-syntax','Emmet'], {'auto_install' : 1})
+    " vim utilit
+    call vam#ActivateAddons(['github:/vim-scripts/vimwiki'], {'auto_install' : 1})
     " additional commands
-    call vam#ActivateAddons(['Syntastic','fugitive','surround', 'Tabular', 'cecscope','The_NERD_Commenter'], {'auto_install' : 1})
-    call vam#ActivateAddons(['AutoComplPop', 'L9'], {'auto_install' : 0})
+    call vam#ActivateAddons(['Syntastic','fugitive','surround','Tabular','cecscope'], {'auto_install' : 1})
+    call vam#ActivateAddons(['cecscope','The_NERD_Commenter','github:/ctrlpvim/ctrlp.vim'], {'auto_install' : 1})
+    call vam#ActivateAddons(['AutoComplPop', 'github:/vim-scripts/L9'], {'auto_install' : 1})
     call vam#ActivateAddons(['neocomplcache','neosnippet'], {'auto_install' : 1})
     " sample: call vam#ActivateAddons(['pluginA','pluginB', ...], {'auto_install' : 0})
 
@@ -350,7 +348,7 @@ if has("autocmd")
     autocmd FileType java,c,cpp,cs,php vmap <C-o> <ESC>'<o/*<ESC>'>o*/
 
     " Numbering 
-    autocmd FileType build,xml,html,c,cs,css,js,javascript,scss,java,perl,shell,bash,cpp,python,vim,php,magpie,go set number
+    autocmd FileType build,xml,html,c,clojure,cs,css,js,javascript,scss,java,perl,shell,bash,cpp,python,vim,php,magpie,go set number
 
     "PHP parser check
     :autocmd FileType php noremap <C-L> :!/usr/bin/php -l %<CR>
@@ -400,16 +398,32 @@ map __ :buffers<BAR>
 
 let g:clj_highlight_builtins = 1
 let g:clj_highlight_contrib = 1
-let g:clj_paren_rainbow = 1
 let g:clj_want_gorilla = 1
 
 let g:SuperTabDefaultCompletionType = "context"
 
- if exists("g:btm_rainbow_color") && g:btm_rainbow_color
-    call rainbow_parenthsis#LoadSquare ()
-    call rainbow_parenthsis#LoadRound ()
-    call rainbow_parenthsis#Activate ()
- endif
+let g:rainbow_active = 1
+let g:rainbow_conf = {
+    \   'guifgs': ['royalblue3', 'darkorange3', 'seagreen3', 'firebrick'],
+    \   'ctermfgs': ['darkgray', 'darkblue', 'darkmagenta', 'darkcyan'],
+    \   'operators': '_,_',
+    \   'parentheses': [['(',')'], ['\[','\]'], ['{','}']],
+    \   'separately': {
+    \       '*': {},
+    \       'lisp': {
+    \           'guifgs': ['royalblue3', 'darkorange3', 'seagreen3', 'firebrick', 'darkorchid3'],
+    \           'ctermfgs': ['darkgray', 'darkblue', 'darkmagenta', 'darkcyan', 'darkred', 'darkgreen'],
+    \       },
+    \       'vim': {
+    \           'parentheses': [['fu\w* \s*.*)','endfu\w*'], ['for','endfor'], ['while', 'endwhile'], ['if','_elseif\|else_','endif'], ['(',')'], ['\[','\]'], ['{','}']],
+    \       },
+    \       'tex': {
+    \           'parentheses': [['(',')'], ['\[','\]'], ['\\begin{.*}','\\end{.*}']],
+    \       },
+    \       'css': 0,
+    \       'stylus': 0,
+    \   }
+    \}
 
 " setup to make sure powerline looks right
 set encoding=utf-8
@@ -497,3 +511,9 @@ let g:neocomplcache_omni_patterns.cpp = '\h\w*\%(\.\|->\)\h\w*\|\h\w*::'
 
 " Enable airline
 " let g:airline_powerline_fonts = 1
+
+" try to remap esc key
+map <Help> <Esc>
+map! <Help> <Esc>
+map <Insert> <Esc>
+map! <Insert> <Esc>
