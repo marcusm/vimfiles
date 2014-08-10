@@ -86,9 +86,9 @@ fun! SetupVAM()
     let &rtp.=(empty(&rtp)?'':',').c.plugin_root_dir.'/vim-addon-manager'
 
     " baseline...utilities required for other plugins
-    call vam#ActivateAddons(['sensible','genutils','vim-classpath'], {'auto_install' : 1})
+    call vam#ActivateAddons(['sensible','genutils','vim-classpath','vimproc','repeat'], {'auto_install' : 1})
     " improved visuals, no or few commands
-    call vam#ActivateAddons(['Rainbow_Parentheses_Improved','vim-airline','Solarized'], {'auto_install' : 1})
+    call vam#ActivateAddons(['vim-niji','vim-airline','Solarized','Indent_Guides'], {'auto_install' : 1})
     " additional language support
     call vam#ActivateAddons(['github:/Blackrush/vim-gocode','scss-syntax','vim-clojure-static','vim-fireplace','javascript%2083', 'phpcomplete',], {'auto_install' : 1})
     " web programming
@@ -96,10 +96,12 @@ fun! SetupVAM()
     " vim utilit
     call vam#ActivateAddons(['github:/vim-scripts/vimwiki'], {'auto_install' : 1})
     " additional commands
-    call vam#ActivateAddons(['Syntastic','fugitive','surround','Tabular','cecscope'], {'auto_install' : 1})
+    call vam#ActivateAddons(['Syntastic','fugitive','surround','vim-easy-align','cecscope'], {'auto_install' : 1})
     call vam#ActivateAddons(['cecscope','The_NERD_Commenter','github:/ctrlpvim/ctrlp.vim'], {'auto_install' : 1})
-    call vam#ActivateAddons(['AutoComplPop', 'github:/vim-scripts/L9'], {'auto_install' : 1})
-    call vam#ActivateAddons(['neocomplcache','neosnippet'], {'auto_install' : 1})
+    call vam#ActivateAddons(['abolish','matchit.zip'], {'auto_install' : 1})
+    call vam#ActivateAddons(['neocomplete','neosnippet','neosnippet-snippets','vim-snippets'], {'auto_install' : 1})
+
+
     " sample: call vam#ActivateAddons(['pluginA','pluginB', ...], {'auto_install' : 0})
 
     " Addons are put into plugin_root_dir/plugin-name directory
@@ -348,10 +350,13 @@ if has("autocmd")
     autocmd FileType java,c,cpp,cs,php vmap <C-o> <ESC>'<o/*<ESC>'>o*/
 
     " Numbering 
-    autocmd FileType build,xml,html,c,clojure,cs,css,js,javascript,scss,java,perl,shell,bash,cpp,python,vim,php,magpie,go set number
+    autocmd FileType build,bash,c,clojure,cpp,cs,css,go,html,java,javascript,js,magpie,perl,php,python,scss,shell,vim,xml,zsh set number
 
     "PHP parser check
     :autocmd FileType php noremap <C-L> :!/usr/bin/php -l %<CR>
+
+    "Resolve neocomplete wierdness with clojure
+    autocmd FileType clojure set completefunc=neocomplete#complete#auto_complete
 
     " From Bram:
     " When editing a file, always jump to the last known cursor position.
@@ -400,117 +405,110 @@ let g:clj_highlight_builtins = 1
 let g:clj_highlight_contrib = 1
 let g:clj_want_gorilla = 1
 
-let g:SuperTabDefaultCompletionType = "context"
-
-let g:rainbow_active = 1
-let g:rainbow_conf = {
-    \   'guifgs': ['royalblue3', 'darkorange3', 'seagreen3', 'firebrick'],
-    \   'ctermfgs': ['darkgray', 'darkblue', 'darkmagenta', 'darkcyan'],
-    \   'operators': '_,_',
-    \   'parentheses': [['(',')'], ['\[','\]'], ['{','}']],
-    \   'separately': {
-    \       '*': {},
-    \       'lisp': {
-    \           'guifgs': ['royalblue3', 'darkorange3', 'seagreen3', 'firebrick', 'darkorchid3'],
-    \           'ctermfgs': ['darkgray', 'darkblue', 'darkmagenta', 'darkcyan', 'darkred', 'darkgreen'],
-    \       },
-    \       'vim': {
-    \           'parentheses': [['fu\w* \s*.*)','endfu\w*'], ['for','endfor'], ['while', 'endwhile'], ['if','_elseif\|else_','endif'], ['(',')'], ['\[','\]'], ['{','}']],
-    \       },
-    \       'tex': {
-    \           'parentheses': [['(',')'], ['\[','\]'], ['\\begin{.*}','\\end{.*}']],
-    \       },
-    \       'css': 0,
-    \       'stylus': 0,
-    \   }
-    \}
+" rainbow paren settings
+let g:niji_matching_filetypes = ['lisp', 'ruby', 'python', 'clojure', 'javascript', 'js', 'csharp', 'vimscript']
 
 " setup to make sure powerline looks right
 set encoding=utf-8
 set fillchars+=stl:\ ,stlnc:\
-"set rtp +=~/.vim/bundle/powerline/powerline/bindings/vim/
 
 
-
-
-" setup SuperTab
-" let g:SuperTabDefaultCompletionType = "context"
-
-" Disable AutoComplPop. Comment out this line if AutoComplPop is not installed.
+" Disable AutoComplPop.
 let g:acp_enableAtStartup = 0
-" Launches neocomplcache automatically on vim startup.
-let g:neocomplcache_enable_at_startup = 1
+" Use neocomplete.
+let g:neocomplete_force_overwrite_completefunc = 1 
+let g:neocomplete#enable_at_startup = 1
 " Use smartcase.
-let g:neocomplcache_enable_smart_case = 1
-" Use camel case completion.
-let g:neocomplcache_enable_camel_case_completion = 1
-" Use underscore completion.
-let g:neocomplcache_enable_underbar_completion = 1
-" Sets minimum char length of syntax keyword.
-let g:neocomplcache_min_syntax_length = 3
-" buffer file name pattern that locks neocomplcache. e.g. ku.vim or fuzzyfinder 
-let g:neocomplcache_lock_buffer_name_pattern = '\*ku\*'
+let g:neocomplete#enable_smart_case = 1
+" Set minimum syntax keyword length.
+let g:neocomplete#sources#syntax#min_keyword_length = 3
+let g:neocomplete#lock_buffer_name_pattern = '\*ku\*'
 
-" Define file-type dependent dictionaries.
-let g:neocomplcache_dictionary_filetype_lists = {
-    \ 'default' : '',
-    \ 'vimshell' : $HOME.'/.vimshell_hist',
-    \ 'scheme' : $HOME.'/.gosh_completions'
-    \ }
+" Define dictionary.
+let g:neocomplete#sources#dictionary#dictionaries = {
+            \ 'default' : '',
+            \ 'vimshell' : $HOME.'/.vimshell_hist',
+            \ 'scheme' : $HOME.'/.gosh_completions'
+            \ }
 
-" Define keyword, for minor languages
-if !exists('g:neocomplcache_keyword_patterns')
-  let g:neocomplcache_keyword_patterns = {}
+" Define keyword.
+if !exists('g:neocomplete#keyword_patterns')
+    let g:neocomplete#keyword_patterns = {}
 endif
-let g:neocomplcache_keyword_patterns['default'] = '\h\w*'
+let g:neocomplete#keyword_patterns['default'] = '\h\w*'
+
 
 " Plugin key-mappings.
-inoremap <expr><C-g>     neocomplcache#undo_completion()
-inoremap <expr><C-l>     neocomplcache#complete_common_string()
-
-" SuperTab like snippets behavior.
-"imap <expr><TAB> neocomplcache#sources#snippets_complete#expandable() ? "\<Plug>(neocomplcache_snippets_expand)" : pumvisible() ? "\<C-n>" : "\<TAB>"
+inoremap <expr><C-g>     neocomplete#undo_completion()
+inoremap <expr><C-l>     neocomplete#complete_common_string()
 
 " Recommended key-mappings.
 " <CR>: close popup and save indent.
-inoremap <expr><CR>  neocomplcache#smart_close_popup() . "\<CR>"
+inoremap <silent> <CR> <C-r>=<SID>my_cr_function()<CR>
+function! s:my_cr_function()
+    return neocomplete#close_popup() . "\<CR>"
+    " For no inserting <CR> key.
+    "return pumvisible() ? neocomplete#close_popup() : "\<CR>"
+endfunction
 " <TAB>: completion.
 inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
 " <C-h>, <BS>: close popup and delete backword char.
-inoremap <expr><C-h> neocomplcache#smart_close_popup()."\<C-h>"
-inoremap <expr><BS> neocomplcache#smart_close_popup()."\<C-h>"
-inoremap <expr><C-y>  neocomplcache#close_popup()
-inoremap <expr><C-e>  neocomplcache#cancel_popup()
+inoremap <expr><C-h> neocomplete#smart_close_popup()."\<C-h>"
+inoremap <expr><BS> neocomplete#smart_close_popup()."\<C-h>"
+inoremap <expr><C-y>  neocomplete#close_popup()
+inoremap <expr><C-e>  neocomplete#cancel_popup()
 
-" AutoComplPop like behavior.
-let g:neocomplcache_enable_auto_select = 1
-
-" Shell like behavior(not recommended).
-"set completeopt+=longest
-"let g:neocomplcache_enable_auto_select = 1
-"let g:neocomplcache_disable_auto_complete = 1
-"inoremap <expr><TAB>  pumvisible() ? "\<Down>" : "\<TAB>"
-"inoremap <expr><CR>  neocomplcache#smart_close_popup() . "\<CR>"
 
 " Enable omni completion. Not required if they are already set elsewhere in .vimrc
-autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
+autocmd FileType css,less setlocal omnifunc=csscomplete#CompleteCSS
 autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
 autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
 autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
 autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
 
 " Enable heavy omni completion, which require computational power and may stall the vim. 
-if !exists('g:neocomplcache_omni_patterns')
-  let g:neocomplcache_omni_patterns = {}
+if !exists('g:neocomplete_omni_patterns')
+  let g:neocomplete_omni_patterns = {}
 endif
-let g:neocomplcache_omni_patterns.ruby = '[^. *\t]\.\w*\|\h\w*::'
+let g:neocomplete_omni_patterns.ruby = '[^. *\t]\.\w*\|\h\w*::'
 "autocmd FileType ruby setlocal omnifunc=rubycomplete#Complete
-let g:neocomplcache_omni_patterns.php = '[^. \t]->\h\w*\|\h\w*::'
-let g:neocomplcache_omni_patterns.c = '\%(\.\|->\)\h\w*'
-let g:neocomplcache_omni_patterns.cpp = '\h\w*\%(\.\|->\)\h\w*\|\h\w*::'
+let g:neocomplete_omni_patterns.php = '[^. \t]->\h\w*\|\h\w*::'
+let g:neocomplete_omni_patterns.c = '\%(\.\|->\)\h\w*'
+let g:neocomplete_omni_patterns.cpp = '\h\w*\%(\.\|->\)\h\w*\|\h\w*::'
+
+" neosnippet setup
+" Enable snipMate compatibility feature.
+let g:neosnippet#enable_snipmate_compatibility = 1
+let g:neosnippet#snippets_directory='~/.vim/vim-addons/vim-snippets/snippets'
+
+" Plugin key-mappings.
+imap <C-k>     <Plug>(neosnippet_expand_or_jump)
+smap <C-k>     <Plug>(neosnippet_expand_or_jump)
+xmap <C-k>     <Plug>(neosnippet_expand_target)
+
+" SuperTab like snippets behavior.
+imap <expr><TAB> neosnippet#expandable_or_jumpable() ?
+            \ "\<Plug>(neosnippet_expand_or_jump)"
+            \: pumvisible() ? "\<C-n>" : "\<TAB>"
+smap <expr><TAB> neosnippet#expandable_or_jumpable() ?
+            \ "\<Plug>(neosnippet_expand_or_jump)"
+            \: "\<TAB>"
+
+" For snippet_complete marker.
+if has('conceal')
+    set conceallevel=2 concealcursor=i
+endif
 
 " Enable airline
-" let g:airline_powerline_fonts = 1
+if !has('win32')
+    let g:airline_powerline_fonts = 1
+endif
+
+" Start interactive EasyAlign in visual mode (e.g. vip<Enter>)
+vmap <Enter> <Plug>(EasyAlign)
+" Start interactive EasyAlign for a motion/text object (e.g. <Leader>aip)
+nmap <Leader>a <Plug>(EasyAlign)
+ 
 
 " try to remap esc key
 map <Help> <Esc>
