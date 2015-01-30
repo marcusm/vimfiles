@@ -1,18 +1,32 @@
-if has('win32')
-    let g:vimfiles_path = fnamemodify($HOME.'/vimfiles', ':p')
-    let g:vimrc_path    = fnamemodify($HOME.'/_vimrc', ':p')
+" put this line first in ~/.vimrc
+set nocompatible | filetype indent plugin on | syn on
+
+let g:v = {}
+let v.is_nvim = strridx($VIM,"nvim")
+
+if (v.is_nvim > 0)
+    let v.vim_resource_path = ".nvim"
+    let v.vimrc_file_name = ".vimrc"
 else
-    let g:vimfiles_path = fnamemodify('~/.vim', ':p')
-    let g:vimrc_path    = fnamemodify('~/.vim/.vimrc', ':p')
-    set backupdir=$HOME/.vim/backup
-    set directory=$HOME/.vim/swap
+    let v.vim_resource_path  = ".vim"
+    let v.vimrc_file_name = ".vimrc"
+endif
+
+if has('win32')
+    let v.vimfiles_path = fnamemodify($HOME.'/vimfiles', ':p')
+    let v.vimrc_path    = fnamemodify($HOME.'/_vimrc', ':p')
+    let v.plugin_root_dir = join([v.vimfiles_path, 'vim-addons'],"/")
+else
+    let v.vimfiles_path = join([expand($HOME), v.vim_resource_path],"/")
+    let v.vimrc_path = join([expand($HOME), v.vim_resource_path, v.vimrc_file_name],"/")
+    let v.plugin_root_dir = join([expand($HOME), v.vim_resource_path, 'vim-addons'],"/")
+
+    let &backupdir = join([expand($HOME), v.vim_resource_path, 'backup'],"/")
+    let &directory = join([expand($HOME), v.vim_resource_path, 'swap'],"/")
 endif
 
 " This needs to be set prior to loading any plugins
 set nocompatible
-
-" put this line first in ~/.vimrc
-set nocompatible | filetype indent plugin on | syn on
 
 fun! MyGitCheckout(repository, targetDir)
 	 let a:repository.url = substitute(a:repository.url, '^git://github', 'https://github', '')
@@ -51,7 +65,7 @@ fun! EnsureVamIsOnDisk(plugin_root_dir)
     endif
 endfun
 
-fun! SetupVAM()
+fun! SetupVAM(vim_config)
     " Set advanced options like this:
     " let g:vim_addon_manager = {}
     " let g:vim_addon_manager.key = value
@@ -70,13 +84,13 @@ fun! SetupVAM()
     let g:vim_addon_manager.log_to_buf =1
 	let g:vim_addon_manager.auto_install =1
 	"let g:vim_addon_manager.shell_commands_run_method = system
-	let g:vim_addon_manager.log_buffer_name = expand('$HOME/.vam_log')
+	let g:vim_addon_manager.log_buffer_name = expand('$HOME/.nvam_log')
 	
     let g:vim_addon_manager.scms.git.clone=['MyGitCheckout']
     let g:vim_addon_manager['plugin_dir_by_name'] = 'MyPluginDirFromName'
-	
-     let c.plugin_root_dir = expand('$HOME/.vim/vim-addons')
-    "let c.plugin_root_dir = expand('$HOME/vimfiles/vim-addons')
+
+    let c.plugin_root_dir = a:vim_config.plugin_root_dir
+"    let c.plugin_root_dir = expand('$HOME/vimfiles/vim-addons')
 	
     if !EnsureVamIsOnDisk(c.plugin_root_dir)
         echohl ErrorMsg | echomsg "No VAM found!" | echohl NONE
@@ -86,20 +100,24 @@ fun! SetupVAM()
     let &rtp.=(empty(&rtp)?'':',').c.plugin_root_dir.'/vim-addon-manager'
 
     " baseline...utilities required for other plugins
-    call vam#ActivateAddons(['sensible','genutils','vim-classpath','vimproc','repeat'], {'auto_install' : 1})
+    call vam#ActivateAddons(['sensible','genutils','vim-classpath','repeat','dispatch','cecscope'], {'auto_install' : 1})
     " improved visuals, no or few commands
     call vam#ActivateAddons(['vim-niji','vim-airline','Solarized','Indent_Guides'], {'auto_install' : 1})
-    " additional language support
-    call vam#ActivateAddons(['github:/Blackrush/vim-gocode','scss-syntax','vim-clojure-static','vim-fireplace','javascript%2083', 'phpcomplete',], {'auto_install' : 1})
+    " GoLang support
+    call vam#ActivateAddons(['github:/Blackrush/vim-gocode'], {'auto_install' : 1})
+    " Fsharp support
+    call vam#ActivateAddons(['github:kongo2002/fsharp-vim.git'], {'auto_install' : 1})
     " web programming
-    call vam#ActivateAddons(['css_color','scss-syntax','Emmet'], {'auto_install' : 1})
+    call vam#ActivateAddons(['scss-syntax','Emmet','javascript%2083'], {'auto_install' : 1})
+    " clojure language support
+    call vam#ActivateAddons(['vim-clojure-static','vim-fireplace','github:tpope/vim-leiningen.git','vim-sexp','github:tpope/vim-sexp-mappings-for-regular-people.git','github:guns/vim-clojure-highlight.git'], {'auto_install' : 1})
     " vim utilit
-    call vam#ActivateAddons(['github:/vim-scripts/vimwiki'], {'auto_install' : 1})
+    call vam#ActivateAddons(['github:christoomey/vim-tmux-navigator.git'], {'auto_install' : 1})
     " additional commands
-    call vam#ActivateAddons(['Syntastic','fugitive','surround','vim-easy-align','cecscope'], {'auto_install' : 1})
-    call vam#ActivateAddons(['cecscope','The_NERD_Commenter','github:/ctrlpvim/ctrlp.vim'], {'auto_install' : 1})
+    call vam#ActivateAddons(['Syntastic','fugitive','surround','vim-easy-align'], {'auto_install' : 1})
+    call vam#ActivateAddons(['commentary','github:/ctrlpvim/ctrlp.vim'], {'auto_install' : 1})
     call vam#ActivateAddons(['abolish','matchit.zip'], {'auto_install' : 1})
-    call vam#ActivateAddons(['neocomplete','neosnippet','neosnippet-snippets','vim-snippets'], {'auto_install' : 1})
+    call vam#ActivateAddons(['YouCompleteMe'], {'auto_install' : 1})
 
 
     " sample: call vam#ActivateAddons(['pluginA','pluginB', ...], {'auto_install' : 0})
@@ -120,7 +138,7 @@ fun! SetupVAM()
     "    ..ActivateAddons(["github:user/repo", .. => github://user/repo
     " Also see section "2.2. names of addons and addon sources" in VAM's documentation
 endfun
-call SetupVAM()
+call SetupVAM(v)
 " experimental [E1]: load plugins lazily depending on filetype, See
 " NOTES
 " experimental [E2]: run after gui has been started (gvim) [3]
@@ -139,8 +157,8 @@ set statusline=+'%<\ %f\ %{fugitive#statusline()}'
 let mapleader = ","
 let g:mapleader = ","
 
-set history=500
 set spell
+set history=500
 set showmode
 set bg=dark
 colorscheme solarized 
@@ -200,7 +218,6 @@ endif
 nmap <Down> gj
 nmap <Up> gk
 
-
 " set the eformat for SNC for now, will need others
 set efm=%f(%l\\,%c):\ %m
 
@@ -210,7 +227,6 @@ set ch=2
 " no toolbar needed
 set guioptions-=T
 
-
 " Allow the cursor to go in to "invalid" places
 set virtualedit=all
 
@@ -218,7 +234,7 @@ set virtualedit=all
 set notagrelative
 
 " ------------------------------------------------
-" Setup some helper functions
+" Setup some helper functions for Go
 " ------------------------------------------------
 function! s:GoVet()
     cexpr system("go vet " . shellescape(expand('%')))
@@ -250,16 +266,11 @@ nmap  <leader>cd :lcd %:h
 map <leader>w bcw
 
 "Fast reloading of the .vimrc
-"map <leader>s :source ~/_vimrc<cr>
+" map <leader>s :source $MYVIMRC<cr>
 "Fast editing of .vimrc
 "When .vimrc is edited, reload it
-if has("unix")
-    map <leader>e :e! ~/.vimrc<cr>
-    autocmd! bufwritepost .gvimrc source ~/.gvimrc
-else
-    map <leader>e :e! ~/_vimrc<cr>
-    autocmd! bufwritepost _vimrc source ~/_vimrc
-endif         
+ map <leader>e :e! $MYVIMRC<cr>
+ autocmd! bufwritepost $MYVIMRC source $MYVIMRC
 
 " ctrl-tab switches to last used buffer
 nmap <c-tab> :bu #<cr>
@@ -352,12 +363,6 @@ if has("autocmd")
     " Numbering 
     autocmd FileType build,bash,c,clojure,cpp,cs,css,go,html,java,javascript,js,magpie,perl,php,python,scss,shell,vim,xml,zsh set number
 
-    "PHP parser check
-    :autocmd FileType php noremap <C-L> :!/usr/bin/php -l %<CR>
-
-    "Resolve neocomplete wierdness with clojure
-    autocmd FileType clojure set completefunc=neocomplete#complete#auto_complete
-
     " From Bram:
     " When editing a file, always jump to the last known cursor position.
     " Don't do it when the position is invalid or when inside an event handler
@@ -391,73 +396,8 @@ endif " has("autocmd")
 
 " ***********************************************************************
 
-" tear off buffer
-":tearoff Buffers
-"autocmd VimEnter * tearoff Buffers
-"let g:bmenu_max_pathlen=0
-
-
-map __ :buffers<BAR>
-			\let i = input("Buffer number: ")<BAR>
-			\execute "buffer " . i<CR> 
-
-let g:clj_highlight_builtins = 1
-let g:clj_highlight_contrib = 1
-let g:clj_want_gorilla = 1
-
 " rainbow paren settings
 let g:niji_matching_filetypes = ['lisp', 'ruby', 'python', 'clojure', 'javascript', 'js', 'csharp', 'vimscript']
-
-" setup to make sure powerline looks right
-set encoding=utf-8
-set fillchars+=stl:\ ,stlnc:\
-
-
-" Disable AutoComplPop.
-let g:acp_enableAtStartup = 0
-" Use neocomplete.
-let g:neocomplete_force_overwrite_completefunc = 1 
-let g:neocomplete#enable_at_startup = 1
-" Use smartcase.
-let g:neocomplete#enable_smart_case = 1
-" Set minimum syntax keyword length.
-let g:neocomplete#sources#syntax#min_keyword_length = 3
-let g:neocomplete#lock_buffer_name_pattern = '\*ku\*'
-
-" Define dictionary.
-let g:neocomplete#sources#dictionary#dictionaries = {
-            \ 'default' : '',
-            \ 'vimshell' : $HOME.'/.vimshell_hist',
-            \ 'scheme' : $HOME.'/.gosh_completions'
-            \ }
-
-" Define keyword.
-if !exists('g:neocomplete#keyword_patterns')
-    let g:neocomplete#keyword_patterns = {}
-endif
-let g:neocomplete#keyword_patterns['default'] = '\h\w*'
-
-
-" Plugin key-mappings.
-inoremap <expr><C-g>     neocomplete#undo_completion()
-inoremap <expr><C-l>     neocomplete#complete_common_string()
-
-" Recommended key-mappings.
-" <CR>: close popup and save indent.
-inoremap <silent> <CR> <C-r>=<SID>my_cr_function()<CR>
-function! s:my_cr_function()
-    return neocomplete#close_popup() . "\<CR>"
-    " For no inserting <CR> key.
-    "return pumvisible() ? neocomplete#close_popup() : "\<CR>"
-endfunction
-" <TAB>: completion.
-inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
-" <C-h>, <BS>: close popup and delete backword char.
-inoremap <expr><C-h> neocomplete#smart_close_popup()."\<C-h>"
-inoremap <expr><BS> neocomplete#smart_close_popup()."\<C-h>"
-inoremap <expr><C-y>  neocomplete#close_popup()
-inoremap <expr><C-e>  neocomplete#cancel_popup()
-
 
 " Enable omni completion. Not required if they are already set elsewhere in .vimrc
 autocmd FileType css,less setlocal omnifunc=csscomplete#CompleteCSS
@@ -465,39 +405,6 @@ autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
 autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
 autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
 autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
-
-" Enable heavy omni completion, which require computational power and may stall the vim. 
-if !exists('g:neocomplete_omni_patterns')
-  let g:neocomplete_omni_patterns = {}
-endif
-let g:neocomplete_omni_patterns.ruby = '[^. *\t]\.\w*\|\h\w*::'
-"autocmd FileType ruby setlocal omnifunc=rubycomplete#Complete
-let g:neocomplete_omni_patterns.php = '[^. \t]->\h\w*\|\h\w*::'
-let g:neocomplete_omni_patterns.c = '\%(\.\|->\)\h\w*'
-let g:neocomplete_omni_patterns.cpp = '\h\w*\%(\.\|->\)\h\w*\|\h\w*::'
-
-" neosnippet setup
-" Enable snipMate compatibility feature.
-let g:neosnippet#enable_snipmate_compatibility = 1
-let g:neosnippet#snippets_directory='~/.vim/vim-addons/vim-snippets/snippets'
-
-" Plugin key-mappings.
-imap <C-k>     <Plug>(neosnippet_expand_or_jump)
-smap <C-k>     <Plug>(neosnippet_expand_or_jump)
-xmap <C-k>     <Plug>(neosnippet_expand_target)
-
-" SuperTab like snippets behavior.
-imap <expr><TAB> neosnippet#expandable_or_jumpable() ?
-            \ "\<Plug>(neosnippet_expand_or_jump)"
-            \: pumvisible() ? "\<C-n>" : "\<TAB>"
-smap <expr><TAB> neosnippet#expandable_or_jumpable() ?
-            \ "\<Plug>(neosnippet_expand_or_jump)"
-            \: "\<TAB>"
-
-" For snippet_complete marker.
-if has('conceal')
-    set conceallevel=2 concealcursor=i
-endif
 
 " Enable airline
 if !has('win32')
@@ -508,7 +415,6 @@ endif
 vmap <Enter> <Plug>(EasyAlign)
 " Start interactive EasyAlign for a motion/text object (e.g. <Leader>aip)
 nmap <Leader>a <Plug>(EasyAlign)
- 
 
 " try to remap esc key
 map <Help> <Esc>
