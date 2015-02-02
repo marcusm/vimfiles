@@ -1,2 +1,5 @@
 # ignore the backup and tmp directories
 vim-addons
+swap
+backup
+spell

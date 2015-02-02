@@ -2,21 +2,20 @@
 set nocompatible | filetype indent plugin on | syn on
 
 let g:v = {}
-let v.is_nvim = strridx($VIM,"nvim")
-
-if (v.is_nvim > 0)
-    let v.vim_resource_path = ".nvim"
-    let v.vimrc_file_name = ".vimrc"
-else
-    let v.vim_resource_path  = ".vim"
-    let v.vimrc_file_name = ".vimrc"
-endif
 
 if has('win32')
     let v.vimfiles_path = fnamemodify($HOME.'/vimfiles', ':p')
     let v.vimrc_path    = fnamemodify($HOME.'/_vimrc', ':p')
     let v.plugin_root_dir = join([v.vimfiles_path, 'vim-addons'],"/")
 else
+    if has('nvim')
+        let v.vim_resource_path = ".nvim"
+        let v.vimrc_file_name = ".nvimrc"
+    else
+        let v.vim_resource_path  = ".vim"
+        let v.vimrc_file_name = ".vimrc"
+    endif
+
     let v.vimfiles_path = join([expand($HOME), v.vim_resource_path],"/")
     let v.vimrc_path = join([expand($HOME), v.vim_resource_path, v.vimrc_file_name],"/")
     let v.plugin_root_dir = join([expand($HOME), v.vim_resource_path, 'vim-addons'],"/")
