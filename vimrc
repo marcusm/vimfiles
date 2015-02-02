@@ -25,6 +25,8 @@ else
     let &directory = join([expand($HOME), v.vim_resource_path, 'swap'],"/")
 endif
 
+let v.vam_log_file = join([expand($HOME), v.vim_resource_path, 'vam.log'],"/")
+
 " This needs to be set prior to loading any plugins
 set nocompatible
 
@@ -84,7 +86,7 @@ fun! SetupVAM(vim_config)
     let g:vim_addon_manager.log_to_buf =1
 	let g:vim_addon_manager.auto_install =1
 	"let g:vim_addon_manager.shell_commands_run_method = system
-	let g:vim_addon_manager.log_buffer_name = expand('$HOME/.nvam_log')
+	let g:vim_addon_manager.log_buffer_name = a:vim_config.vam_log_file
 	
     let g:vim_addon_manager.scms.git.clone=['MyGitCheckout']
     let g:vim_addon_manager['plugin_dir_by_name'] = 'MyPluginDirFromName'
