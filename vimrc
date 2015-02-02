@@ -5,10 +5,12 @@ let g:v = {}
 
 if has('win32') || has('win64')
     let g:plug_threads = 1
+    let v.is_win = 1
     let v.vimfiles_path = fnamemodify($HOME.'/vimfiles', ':p')
     let v.vimrc_path    = fnamemodify($HOME.'/_vimrc', ':p')
     let v.plugin_root_dir = join([v.vimfiles_path, 'bundles'],"/")
 else
+    let v.is_win = 0
     if has('nvim')
         let v.vim_resource_path = ".nvim"
         let v.vimrc_file_name = ".nvimrc"
@@ -65,6 +67,9 @@ Plug 'nsf/gocode', { 'rtp': 'vim', 'for': 'golang' }
 " F# support
 Plug 'kongo2002/fsharp-vim', { 'rtp': 'vim', 'for': 'golang' }
 
+" Powershell support
+Plug 'PProvost/vim-ps1', {'for' : 'ps1'}
+
 " Tmux support
 Plug 'christoomey/vim-tmux-navigator'
 
@@ -95,7 +100,9 @@ function! BuildYCM(info)
   endif
 endfunction
 
-Plug 'Valloric/YouCompleteMe', { 'do': function('BuildYCM') }
+if v.is_win == 0
+    Plug 'Valloric/YouCompleteMe', { 'do': function('BuildYCM') }
+endif
 
 call plug#end()
 
