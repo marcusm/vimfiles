@@ -3,10 +3,11 @@ set nocompatible | filetype indent plugin on | syn on
 
 let g:v = {}
 
-if has('win32')
+if has('win32') || has('win64')
+    let g:plug_threads = 1
     let v.vimfiles_path = fnamemodify($HOME.'/vimfiles', ':p')
     let v.vimrc_path    = fnamemodify($HOME.'/_vimrc', ':p')
-    let v.plugin_root_dir = join([v.vimfiles_path, 'vim-addons'],"/")
+    let v.plugin_root_dir = join([v.vimfiles_path, 'bundles'],"/")
 else
     if has('nvim')
         let v.vim_resource_path = ".nvim"
@@ -18,135 +19,85 @@ else
 
     let v.vimfiles_path = join([expand($HOME), v.vim_resource_path],"/")
     let v.vimrc_path = join([expand($HOME), v.vim_resource_path, v.vimrc_file_name],"/")
-    let v.plugin_root_dir = join([expand($HOME), v.vim_resource_path, 'vim-addons'],"/")
+    let v.plugin_root_dir = join([expand($HOME), v.vim_resource_path, 'bundles'],"/")
 
     let &backupdir = join([expand($HOME), v.vim_resource_path, 'backup'],"/")
     let &directory = join([expand($HOME), v.vim_resource_path, 'swap'],"/")
 endif
 
-let v.vam_log_file = join([expand($HOME), v.vim_resource_path, 'vam.log'],"/")
+let v.plugin_path = join([v.vimfiles_path, 'autoload/plug.vim'],"/")
 
-" This needs to be set prior to loading any plugins
-set nocompatible
+" use vim-plug for my plugins
+if empty(glob(v.plugin_root_dir))
+  silent !curl -fLo v.plugin_path --create-dirs
+      \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+        autocmd VimEnter * PlugInstall
+        endif
 
-fun! MyGitCheckout(repository, targetDir)
-	 let a:repository.url = substitute(a:repository.url, '^git://github', 'https://github', '')
-	 return vam#utils#RunShell('git clone --depth=1 $.url $p', a:repository, a:targetDir)
-endfun
+"    call vam#ActivateAddons(['sensible','genutils','vim-classpath','repeat','dispatch','cecscope'], {'auto_install' : 1})
+"
+call plug#begin(v.plugin_root_dir)
+" baseline...utilities required for other plugins
+Plug 'tpope/vim-sensible'
+Plug 'tpope/vim-repeat'
+Plug 'tpope/vim-dispatch'
+Plug 'vim-scripts/genutils'
 
-fun! MyPluginDirFromName(name)
-  let dir = vam#DefaultPluginDirFromName(a:name)
-  return substitute(dir,'%','_', 'g')
-endf
+" improved visuals, no or few commands
+Plug 'amdt/vim-niji'
+Plug 'bling/vim-airline'
+Plug 'altercation/vim-colors-solarized'
+Plug 'nathanaelkane/vim-indent-guides'
+Plug 'scrooloose/syntastic'
 
-fun! EnsureVamIsOnDisk(plugin_root_dir)
-    " windows users may want to use http://mawercer.de/~marc/vam/index.php
-    " to fetch VAM, VAM-known-repositories and the listed plugins
-    " without having to install curl, 7-zip and git tools first
-    " -> BUG [4] (git-less installation)
-    let vam_autoload_dir = a:plugin_root_dir.'/vim-addon-manager/autoload'
-    if isdirectory(vam_autoload_dir)
-    return 1
-    else
-    if 1 == confirm("Clone VAM into ".a:plugin_root_dir."?","&Y\n&N")
-        " I'm sorry having to add this reminder. Eventually it'll pay off.
-        call confirm("Remind yourself that most plugins ship with ".
-                    \"documentation (README*, doc/*.txt). It is your ".
-                    \"first source of knowledge. If you can't find ".
-                    \"the info you're looking for in reasonable ".
-                    \"time ask maintainers to improve documentation")
-        call mkdir(a:plugin_root_dir, 'p')
-        execute '!git clone --depth=1 git://github.com/MarcWeber/vim-addon-manager '.
-                    \       shellescape(a:plugin_root_dir, 1).'/vim-addon-manager'
-        " VAM runs helptags automatically when you install or update 
-        " plugins
-        exec 'helptags '.fnameescape(a:plugin_root_dir.'/vim-addon-manager/doc')
-    endif
-    return isdirectory(vam_autoload_dir)
-    endif
-endfun
+" clojure language support
+Plug 'guns/vim-clojure-static', { 'for': 'clojure' }
+Plug 'tpope/vim-classpath', { 'for': 'clojure' }
+Plug 'tpope/vim-fireplace', { 'for': 'clojure' }
+Plug 'tpope/vim-leiningen', { 'for': 'clojure' }
+Plug 'guns/vim-sexp', { 'for': 'clojure' }
+Plug 'tpope/vim-sexp-mappings-for-regular-people', { 'for': 'clojure' }
+Plug 'guns/vim-clojure-highlight', { 'for': 'clojure' }
 
-fun! SetupVAM(vim_config)
-    " Set advanced options like this:
-    " let g:vim_addon_manager = {}
-    " let g:vim_addon_manager.key = value
-    "     Pipe all output into a buffer which gets written to disk
-    " let g:vim_addon_manager.log_to_buf =1
+" GoLang support
+Plug 'nsf/gocode', { 'rtp': 'vim', 'for': 'golang' }
 
-    " Example: drop git sources unless git is in PATH. Same plugins can
-    " be installed from www.vim.org. Lookup MergeSources to get more control
-    " let g:vim_addon_manager.drop_git_sources = !executable('git')
-    " let g:vim_addon_manager.debug_activation = 1
-    " VAM install location:
-    let c = get(g:, 'vim_addon_manager', {'scms': {'git': {}}})
-    let g:vim_addon_manager = c
-    let g:vim_addon_manager.drop_git_sources = !executable('git')
-    "let g:vim_addon_manager.debug_activation = 1
-    let g:vim_addon_manager.log_to_buf =1
-	let g:vim_addon_manager.auto_install =1
-	"let g:vim_addon_manager.shell_commands_run_method = system
-	let g:vim_addon_manager.log_buffer_name = a:vim_config.vam_log_file
-	
-    let g:vim_addon_manager.scms.git.clone=['MyGitCheckout']
-    let g:vim_addon_manager['plugin_dir_by_name'] = 'MyPluginDirFromName'
+" F# support
+Plug 'kongo2002/fsharp-vim', { 'rtp': 'vim', 'for': 'golang' }
 
-    let c.plugin_root_dir = a:vim_config.plugin_root_dir
-"    let c.plugin_root_dir = expand('$HOME/vimfiles/vim-addons')
-	
-    if !EnsureVamIsOnDisk(c.plugin_root_dir)
-        echohl ErrorMsg | echomsg "No VAM found!" | echohl NONE
-        return
-    endif
-	
-    let &rtp.=(empty(&rtp)?'':',').c.plugin_root_dir.'/vim-addon-manager'
+" Tmux support
+Plug 'christoomey/vim-tmux-navigator'
 
-    " baseline...utilities required for other plugins
-    call vam#ActivateAddons(['sensible','genutils','vim-classpath','repeat','dispatch','cecscope'], {'auto_install' : 1})
-    " improved visuals, no or few commands
-    call vam#ActivateAddons(['vim-niji','vim-airline','Solarized','Indent_Guides'], {'auto_install' : 1})
-    " GoLang support
-    call vam#ActivateAddons(['github:/Blackrush/vim-gocode'], {'auto_install' : 1})
-    " Fsharp support
-    call vam#ActivateAddons(['github:kongo2002/fsharp-vim.git'], {'auto_install' : 1})
-    " web programming
-    call vam#ActivateAddons(['scss-syntax','Emmet','javascript%2083'], {'auto_install' : 1})
-    " clojure language support
-    call vam#ActivateAddons(['vim-clojure-static','vim-fireplace','github:tpope/vim-leiningen.git','vim-sexp','github:tpope/vim-sexp-mappings-for-regular-people.git','github:guns/vim-clojure-highlight.git'], {'auto_install' : 1})
-    " vim utilit
-    call vam#ActivateAddons(['github:christoomey/vim-tmux-navigator.git'], {'auto_install' : 1})
-    " additional commands
-    call vam#ActivateAddons(['Syntastic','fugitive','surround','vim-easy-align'], {'auto_install' : 1})
-    call vam#ActivateAddons(['commentary','github:/ctrlpvim/ctrlp.vim'], {'auto_install' : 1})
-    call vam#ActivateAddons(['abolish','matchit.zip'], {'auto_install' : 1})
-    call vam#ActivateAddons(['YouCompleteMe'], {'auto_install' : 1})
+" web support
+Plug 'mattn/emmet-vim'
+Plug 'cakebaker/scss-syntax.vim'
+Plug 'pangloss/vim-javascript'
 
+"additional commands
 
-    " sample: call vam#ActivateAddons(['pluginA','pluginB', ...], {'auto_install' : 0})
+Plug 'tpope/vim-surround'
+Plug 'tpope/vim-fugitive'
+Plug 'tpope/vim-abolish'
+Plug 'tpope/vim-commentary'
+Plug 'tpope/vim-unimpaired'
 
-    " Addons are put into plugin_root_dir/plugin-name directory
-    " unless those directories exist. Then they are activated.
-    " Activating means adding addon dirs to rtp and do some additional
-    " magic
-    
-    " useful commands
-    " call vam#ActivateAddons(['fugitive', 'Command-T'], {'auto_install' 0 })
+Plug 'junegunn/vim-easy-align'
 
-    " How to find addon names?
-    " - look up source from pool
-    " - (<c-x><c-p> complete plugin names):
-    " You can use name rewritings to point to sources:
-    "    ..ActivateAddons(["github:foo", .. => github://foo/vim-addon-foo
-    "    ..ActivateAddons(["github:user/repo", .. => github://user/repo
-    " Also see section "2.2. names of addons and addon sources" in VAM's documentation
-endfun
-call SetupVAM(v)
-" experimental [E1]: load plugins lazily depending on filetype, See
-" NOTES
-" experimental [E2]: run after gui has been started (gvim) [3]
-" option1:  au VimEnter * call SetupVAM()
-" option2:  au GUIEnter * call SetupVAM()
-" See BUGS sections below [*]
-" Vim 7.0 users see BUGS section [3]
+Plug 'kien/ctrlp.vim'
+
+function! BuildYCM(info)
+  " info is a dictionary with 3 fields
+  "   " - name:   name of the plugin
+  "     " - status: 'installed', 'updated', or 'unchanged'
+  "       " - force:  set on PlugInstall! or PlugUpdate!
+  if a:info.status == 'installed' || a:info.force
+     !./install.sh
+  endif
+endfunction
+
+Plug 'Valloric/YouCompleteMe', { 'do': function('BuildYCM') }
+
+call plug#end()
 
 " my configuration which depends on bundles
 set statusline=+'%<\ %f\ %{fugitive#statusline()}'
@@ -289,32 +240,12 @@ vnoremap <C-S>    <C-C>:update<CR>
 inoremap <C-S>    <C-O>:update<CR>
 
 " ------------------------------------------------
-" Set function keys
-" ------------------------------------------------
-
-" F2 to close a buffer file
-noremap <silent> <F2> :bd<CR>
-vnoremap <silent> <F2> <C-C>:bd<CR>
-inoremap <silent> <F2> <C-O>:bd<CR>
-
-" F3to close a buffer file with !
-noremap <silent> <F3> :bd!<CR>
-vnoremap <silent> <F3> <C-C>:bd!<CR>
-inoremap <silent> <F3> <C-O>:bd!<CR>
-
-" To bring up the sidewindow that displays the tags
-noremap <silent> <F12> :TlistToggle<CR>
-vnoremap <silent> <F12> <C-C>:TlistToggle<CR>
-inoremap <silent> <F12> <C-O>:TlistToggle<CR>
-
-" ------------------------------------------------
 " Setup specific plugins
 " ------------------------------------------------
 
 " surround
 let g:surround_indent = 1
 let g:surround_{char2nr('i')} = "#if GG\r#endif // GG"
-
 
 " backspace in Visual mode deletes selection
 vnoremap <BS> d
@@ -391,7 +322,7 @@ endif " has("autocmd")
 " http://www.vim.org/tips/tip.php?tip_id=1386
 " make autocompletion a bit more friendly to use
 " The first step to "improve" the menu behavior is to execute this command:
-:set completeopt=longest,menuone
+set completeopt=longest,menuone
 
 "The above command will change the 'completeopt' option so that Vim's popup menu doesn't select the first completion item, but rather just inserts the longest common text of all matches; and the menu will come up even if there's only one match. (The longest setting is responsible for the former effect and the menuone is responsible for the latter.) 
 
