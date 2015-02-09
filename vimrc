@@ -28,6 +28,8 @@ else
 endif
 
 let v.plugin_path = join([v.vimfiles_path, 'autoload/plug.vim'],"/")
+let v.cache_dir = join([v.vimfiles_path, '.cache'],"/")
+
 
 " use vim-plug for my plugins
 if empty(glob(v.plugin_root_dir))
@@ -36,13 +38,37 @@ if empty(glob(v.plugin_root_dir))
         autocmd VimEnter * PlugInstall
         endif
 
-"    call vam#ActivateAddons(['sensible','genutils','vim-classpath','repeat','dispatch','cecscope'], {'auto_install' : 1})
-"
+" Functions needed for plugin setup
+function! SetupUnite(info)
+    call unite#filters#matcher_default#use(['matcher_fuzzy'])
+    call unite#filters#sorter_default#use(['sorter_rank'])
+    call unite#custom#source('files_rec/async','line,outline','matchers','matcher_fuzzy')
+    call unite#custom#profile('default', 'context', {
+      \ 'start_insert': 1,
+      \ 'direction': 'botright',
+      \ })
+endfunction
+
+function! BuildYCM(info)
+  " info is a dictionary with 3 fields
+  "   " - name:   name of the plugin
+  "     " - status: 'installed', 'updated', or 'unchanged'
+  "       " - force:  set on PlugInstall! or PlugUpdate!
+  let g:ycm_filetype_blacklist={'unite': 1}
+
+  if a:info.status == 'installed' || a:info.force
+     !./install.sh
+  endif
+endfunction
+
+
 call plug#begin(v.plugin_root_dir)
 " baseline...utilities required for other plugins
 Plug 'tpope/vim-sensible'
 Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-dispatch'
+Plug 'Shougo/vimproc.vim', { 'do': 'make' }
+Plug 'Shougo/neomru.vim'
 Plug 'vim-scripts/genutils'
 
 " improved visuals, no or few commands
@@ -51,6 +77,7 @@ Plug 'bling/vim-airline'
 Plug 'altercation/vim-colors-solarized'
 Plug 'nathanaelkane/vim-indent-guides'
 Plug 'scrooloose/syntastic'
+Plug 'chriskempson/base16-vim'
 
 " clojure language support
 Plug 'guns/vim-clojure-static', { 'for': 'clojure' }
@@ -88,17 +115,7 @@ Plug 'tpope/vim-unimpaired'
 
 Plug 'junegunn/vim-easy-align'
 
-Plug 'kien/ctrlp.vim'
-
-function! BuildYCM(info)
-  " info is a dictionary with 3 fields
-  "   " - name:   name of the plugin
-  "     " - status: 'installed', 'updated', or 'unchanged'
-  "       " - force:  set on PlugInstall! or PlugUpdate!
-  if a:info.status == 'installed' || a:info.force
-     !./install.sh
-  endif
-endfunction
+Plug 'Shougo/unite.vim', {'do': function('SetupUnite')}
 
 if v.is_win == 0
     Plug 'Valloric/YouCompleteMe', { 'do': function('BuildYCM') }
@@ -120,7 +137,7 @@ set spell
 set history=500
 set showmode
 set bg=dark
-colorscheme solarized 
+" colorscheme solarized 
 
 "cursor colors
 highlight cursor        cterm=bold
@@ -145,8 +162,22 @@ set noerrorbells
 set novisualbell
 set t_vb=
 
-"See tabs and spaces easily
-set lcs=tab:>-,trail:_    
+" Display unprintable chars
+set list
+set listchars=tab:▸\ ,extends:❯,precedes:❮,nbsp:␣
+set showbreak=↪
+
+" listchar=te
+" trail is not as flexible, use the below to highlight trailing
+" whitespace. Don't do it for unite windows or readonly files
+highlight ExtraWhitespace ctermbg=red guibg=red
+match ExtraWhitespace /\s\+$/
+    augroup MyAutoCmd
+    autocmd BufWinEnter * if &modifiable && &ft!='unite' | match ExtraWhitespace /\s\+$/ | endif
+    autocmd InsertEnter * if &modifiable && &ft!='unite' | match ExtraWhitespace /\s\+\%#\@<!$/ | endif
+    autocmd InsertLeave * if &modifiable && &ft!='unite' | match ExtraWhitespace /\s\+$/ | endif
+    autocmd BufWinLeave * if &modifiable && &ft!='unite' | call clearmatches() | endif
+augroup END
 
 " - Don't replace TAB character with only spaces
 " - Use a mix of tabs and spaces when I press the TAB key (width 4)
@@ -360,3 +391,68 @@ map <Help> <Esc>
 map! <Help> <Esc>
 map <Insert> <Esc>
 map! <Insert> <Esc>
+
+" Disable arrow keys
+map <up> <nop>
+map <down> <nop>
+map <left> <nop>
+map <right> <nop>
+imap <up> <nop>
+imap <down> <nop>
+imap <left> <nop>
+imap <right> <nop>
+
+" unite setup
+let g:unite_data_directory=join([v.cache_dir, 'unite'])
+let g:unite_source_history_yank_enable=1
+let g:unite_source_rec_max_cache_files=5000
+
+if executable('ag')
+    let g:unite_source_grep_command='ag'
+    let g:unite_source_grep_default_opts='--nocolor --line-numbers --nogroup -S -C4'
+    let g:unite_source_grep_recursive_opt=''
+elseif executable('ack')
+    let g:unite_source_grep_command='ack'
+    let g:unite_source_grep_default_opts='--no-heading --no-color -C4'
+    let g:unite_source_grep_recursive_opt=''
+endif
+
+function! s:unite_settings()
+    nmap <buffer> Q <plug>(unite_exit)
+    nmap <buffer> <esc> <plug>(unite_exit)
+    imap <buffer> <esc> <plug>(unite_exit)
+endfunction
+
+autocmd FileType unite call s:unite_settings()
+
+nmap <space> [unite]
+nnoremap [unite] <nop>
+
+if v.is_win
+    nnoremap <silent> [unite]<space> :<C-u>Unite -toggle -auto-resize -buffer-name=mixed file_rec:! buffer file_mru bookmark<cr><c-u>
+    nnoremap <silent> [unite]f :<C-u>Unite -toggle -auto-resize -buffer-name=files file_rec:!<cr><c-u>
+else
+    nnoremap <silent> [unite]<space> :<C-u>Unite -toggle -auto-resize -buffer-name=mixed file_rec/async:! buffer file_mru bookmark<cr><c-u>
+    nnoremap <silent> [unite]f :<C-u>Unite -toggle -auto-resize -buffer-name=files file_rec/async:!<cr><c-u>
+endif
+nnoremap <silent> [unite]e :<C-u>Unite -buffer-name=recent file_mru<cr>
+nnoremap <silent> [unite]y :<C-u>Unite -buffer-name=yanks history/yank<cr>
+nnoremap <silent> [unite]l :<C-u>Unite -auto-resize -buffer-name=line line<cr>
+nnoremap <silent> [unite]b :<C-u>Unite -auto-resize -buffer-name=buffers buffer<cr>
+nnoremap <silent> [unite]/ :<C-u>Unite -no-quit -buffer-name=search grep:.<cr>
+nnoremap <silent> [unite]m :<C-u>Unite -auto-resize -buffer-name=mappings mapping<cr>
+nnoremap <silent> [unite]s :<C-u>Unite -quick-match buffer<cr>
+
+
+" Fix som iTerm junk
+
+if $TERM_PROGRAM == 'iTerm.app'
+    " different cursors for insert vs normal mode
+    if exists('$TMUX')
+        let &t_SI = "\<Esc>Ptmux;\<Esc>\<Esc>]50;CursorShape=1\x7\<Esc>\\"
+        let &t_EI = "\<Esc>Ptmux;\<Esc>\<Esc>]50;CursorShape=0\x7\<Esc>\\"
+    else
+        let &t_SI = "\<Esc>]50;CursorShape=1\x7"
+        let &t_EI = "\<Esc>]50;CursorShape=0\x7"
+    endif
+endif

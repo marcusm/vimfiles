@@ -4,3 +4,4 @@ swap
 backup
 spell
 autoload/plug.vim
+bundles/eclim
