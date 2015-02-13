@@ -1,5 +1,7 @@
 " put this line first in ~/.vimrc
 set nocompatible | filetype indent plugin on | syn on
+scriptencoding utf-8
+set encoding=utf-8
 
 let g:v = {}
 
@@ -9,6 +11,10 @@ if has('win32') || has('win64')
     let v.vimfiles_path = fnamemodify($HOME.'/vimfiles', ':p')
     let v.vimrc_path    = fnamemodify($HOME.'/_vimrc', ':p')
     let v.plugin_root_dir = join([v.vimfiles_path, 'bundles'],"/")
+
+    let &backupdir = join([expand($HOME), 'vimfiles', 'backup'],"/")
+    let &directory = join([expand($HOME), 'vimfiles', 'swap'],"/")
+    let v.make = ""
 else
     let v.is_win = 0
     if has('nvim')
@@ -70,6 +76,7 @@ Plug 'tpope/vim-dispatch'
 Plug 'Shougo/vimproc.vim', { 'do': 'make' }
 Plug 'Shougo/neomru.vim'
 Plug 'vim-scripts/genutils'
+Plug 'xolox/vim-misc'
 
 " improved visuals, no or few commands
 Plug 'amdt/vim-niji'
@@ -92,7 +99,7 @@ Plug 'guns/vim-clojure-highlight', { 'for': 'clojure' }
 Plug 'nsf/gocode', { 'rtp': 'vim', 'for': 'golang' }
 
 " F# support
-Plug 'kongo2002/fsharp-vim', { 'rtp': 'vim', 'for': 'golang' }
+Plug 'kongo2002/fsharp-vim', { 'for': 'fsharp' }
 
 " Powershell support
 Plug 'PProvost/vim-ps1', {'for' : 'ps1'}
@@ -105,8 +112,10 @@ Plug 'mattn/emmet-vim'
 Plug 'cakebaker/scss-syntax.vim'
 Plug 'pangloss/vim-javascript'
 
-"additional commands
+" local wiki
+Plug 'xolox/vim-notes'
 
+"additional commands
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-abolish'
@@ -133,11 +142,12 @@ set statusline=+'%<\ %f\ %{fugitive#statusline()}'
 let mapleader = ","
 let g:mapleader = ","
 
+let loaded_matchparen = 1
 set spell
 set history=500
 set showmode
 set bg=dark
-" colorscheme solarized 
+colorscheme wombat
 
 "cursor colors
 highlight cursor        cterm=bold
@@ -165,7 +175,7 @@ set t_vb=
 " Display unprintable chars
 set list
 set listchars=tab:▸\ ,extends:❯,precedes:❮,nbsp:␣
-set showbreak=↪
+let &showbreak = '↳ '
 
 " listchar=te
 " trail is not as flexible, use the below to highlight trailing
@@ -381,6 +391,9 @@ if !has('win32')
     let g:airline_powerline_fonts = 1
 endif
 
+" Setup vim-notes
+:let g:notes_directories = ['~/Documents/Notes', '~/Dropbox/Shared Notes']
+
 " Start interactive EasyAlign in visual mode (e.g. vip<Enter>)
 vmap <Enter> <Plug>(EasyAlign)
 " Start interactive EasyAlign for a motion/text object (e.g. <Leader>aip)
@@ -445,7 +458,6 @@ nnoremap <silent> [unite]s :<C-u>Unite -quick-match buffer<cr>
 
 
 " Fix som iTerm junk
-
 if $TERM_PROGRAM == 'iTerm.app'
     " different cursors for insert vs normal mode
     if exists('$TMUX')
