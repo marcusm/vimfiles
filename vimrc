@@ -85,6 +85,7 @@ Plug 'altercation/vim-colors-solarized'
 Plug 'nathanaelkane/vim-indent-guides'
 Plug 'scrooloose/syntastic'
 Plug 'chriskempson/base16-vim'
+Plug 'sjl/badwolf'
 
 " clojure language support
 Plug 'guns/vim-clojure-static', { 'for': 'clojure' }
@@ -100,6 +101,9 @@ Plug 'nsf/gocode', { 'rtp': 'vim', 'for': 'golang' }
 
 " F# support
 Plug 'kongo2002/fsharp-vim', { 'for': 'fsharp' }
+
+" Nim support
+Plug 'zah/nimrod.vim'
 
 " Powershell support
 Plug 'PProvost/vim-ps1', {'for' : 'ps1'}
@@ -147,7 +151,7 @@ set spell
 set history=500
 set showmode
 set bg=dark
-colorscheme wombat
+colorscheme badwolf
 
 "cursor colors
 highlight cursor        cterm=bold
@@ -467,4 +471,13 @@ if $TERM_PROGRAM == 'iTerm.app'
         let &t_SI = "\<Esc>]50;CursorShape=1\x7"
         let &t_EI = "\<Esc>]50;CursorShape=0\x7"
     endif
+endif
+
+" allows cursor change in tmux mode
+if exists('$TMUX')
+    let &t_SI = "\<Esc>Ptmux;\<Esc>\<Esc>]50;CursorShape=1\x7\<Esc>\\"
+    let &t_EI = "\<Esc>Ptmux;\<Esc>\<Esc>]50;CursorShape=0\x7\<Esc>\\"
+else
+    let &t_SI = "\<Esc>]50;CursorShape=1\x7"
+    let &t_EI = "\<Esc>]50;CursorShape=0\x7"
 endif
