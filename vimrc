@@ -100,7 +100,7 @@ Plug 'guns/vim-clojure-highlight', { 'for': 'clojure' }
 Plug 'nsf/gocode', { 'rtp': 'vim', 'for': 'golang' }
 
 " F# support
-Plug 'kongo2002/fsharp-vim', { 'for': 'fsharp' }
+Plug 'marcusm/fsharpbinding', { 'for': 'fsharp' }
 
 " Nim support
 Plug 'zah/nimrod.vim'
@@ -146,7 +146,7 @@ set statusline=+'%<\ %f\ %{fugitive#statusline()}'
 let mapleader = ","
 let g:mapleader = ","
 
-let loaded_matchparen = 1
+" let loaded_matchparen = 1
 set spell
 set history=500
 set showmode
@@ -473,11 +473,7 @@ if $TERM_PROGRAM == 'iTerm.app'
     endif
 endif
 
-" allows cursor change in tmux mode
-if exists('$TMUX')
-    let &t_SI = "\<Esc>Ptmux;\<Esc>\<Esc>]50;CursorShape=1\x7\<Esc>\\"
-    let &t_EI = "\<Esc>Ptmux;\<Esc>\<Esc>]50;CursorShape=0\x7\<Esc>\\"
-else
-    let &t_SI = "\<Esc>]50;CursorShape=1\x7"
-    let &t_EI = "\<Esc>]50;CursorShape=0\x7"
-endif
+" fsharp support
+let g:fsharp_xbuild_path = "xbuild"
+let g:fsharp_test_runner = ""
+
