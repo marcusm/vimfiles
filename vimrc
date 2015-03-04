@@ -6,7 +6,7 @@ set encoding=utf-8
 let g:v = {}
 
 if has('win32') || has('win64')
-    let g:plug_threads = 1
+    " let g:plug_threads = 1
     let v.is_win = 1
     let v.vimfiles_path = fnamemodify($HOME.'/vimfiles', ':p')
     let v.vimrc_path    = fnamemodify($HOME.'/_vimrc', ':p')
@@ -86,6 +86,7 @@ Plug 'nathanaelkane/vim-indent-guides'
 Plug 'scrooloose/syntastic'
 Plug 'chriskempson/base16-vim'
 Plug 'sjl/badwolf'
+Plug 'whatyouhide/vim-gotham'
 
 " clojure language support
 Plug 'guns/vim-clojure-static', { 'for': 'clojure' }
@@ -123,8 +124,9 @@ Plug 'xolox/vim-notes'
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-abolish'
-Plug 'tpope/vim-commentary'
+Plug 'tomtom/tcomment_vim'
 Plug 'tpope/vim-unimpaired'
+
 
 Plug 'junegunn/vim-easy-align'
 
