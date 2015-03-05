@@ -1,4 +1,4 @@
-let vimsettings = '~/.vim/settings'
+let vimsettings = join([v.vimfiles_path, 'settings'],"/")
 let uname = system("uname -s")
 
 for fpath in split(globpath(vimsettings, '*.vim'), '\n')
