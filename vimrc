@@ -70,11 +70,14 @@ let v.settings_file = join([v.vimfiles_path, 'settings.vim'],"/")
 " Plugin Setup {{{1
 " ----------------------------------------------------------------------------
 " use vim-plug for my plugins {{{2
-if empty(glob(v.plugin_root_dir))
-  silent !curl -fLo v.plugin_path --create-dirs
-      \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-        autocmd VimEnter * PlugInstall
-        endif
+silent function! SetupPlug()
+if empty(glob('bundles'))
+    silent !curl -fLo 'bundles/vim-plug/plug.vim' --create-dirs
+                \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+    source bundles/vim-plug/plug.vim
+    autocmd VimEnter * PlugInstall
+endif
+endfunction
 
 " Functions needed for plugin setup {{2
 function! SetupUnite(info)
