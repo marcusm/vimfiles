@@ -138,8 +138,14 @@ Plug 'nsf/gocode', { 'rtp': 'vim', 'for': 'golang' }
 " F# support {{{3
 Plug 'marcusm/fsharpbinding', { 'for': 'fsharp' }
 
+" Markdown support {{{3
+Plug 'tpope/vim-markdown', {'for': 'markdown'}
+
 " Powershell support {{{3
 Plug 'PProvost/vim-ps1', {'for' : 'ps1'}
+
+" TOML support
+Plug 'toml-lang/toml'
 
 " Tmux support {{{3
 Plug 'christoomey/vim-tmux-navigator'
