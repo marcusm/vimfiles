@@ -230,7 +230,7 @@ set cmdheight=2       " # of lines for the command window
 
 " Display unprintable chars
 set list
-set listchars=tab:▸\ ,extends:❯,precedes:❮,nbsp:␣
+" set listchars=tab:▸\ ,extends:❯,precedes:❮,nbsp:␣
 let &showbreak = '↳ '
 
 set number            " show line numbers
@@ -451,17 +451,34 @@ set autoread             " Automatically re-read files changed outside
 " and swap filenames using the full path to the file, substituting '%' for
 " '/', e.g. '%Users%bob%foo.txt'
 let s:dir = has('win32') ? '$APPDATA/Vim' : match(system('uname'), "Darwin") > -1 ? '~/Library/Vim' : empty($XDG_DATA_HOME) ? '~/.local/share/vim' : '$XDG_DATA_HOME/vim'
-if isdirectory(expand(s:dir))
-  if &directory =~# '^\.,'
-    let &directory = expand(s:dir) . '/swap//,' . &directory
-  endif
-  if &backupdir =~# '^\.,'
-    let &backupdir = expand(s:dir) . '/backup//,' . &backupdir
-  endif
-  if exists('+undodir') && &undodir =~# '^\.\%(,\|$\)'
-    let &undodir = expand(s:dir) . '/undo//,' . &undodir
-  endif
+
+let common_dir = expand(s:dir) .'/'
+if !isdirectory(common_dir)
+    call mkdir(common_dir)
 endif
+
+let dir_list = {
+            \ 'backup' : 'backupdir',
+            \ 'swap' : 'directory',
+            \ 'views' : 'viewdir',
+            \ 'undo' : 'undodir' }
+
+for [dirname, settingname] in items(dir_list)
+  let directory = common_dir . dirname . '/'
+  if exists("*mkdir")
+    if !isdirectory(directory)
+      call mkdir(directory)
+    endif
+  endif
+  if !isdirectory(directory)
+    echo "Warning: Unable to create backup directory: " . directory
+    echo "Try: mkdir -p " . directory
+    else
+    let directory = substitute(directory, " ", "\\\\ ", "g")
+    exec "set " . settingname . "=" . directory
+  endif
+endfor
+
 if exists('+undofile')
   set undofile
 endif
