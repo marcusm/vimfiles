@@ -597,10 +597,6 @@ autocmd BufRead,BufNewfile *.build set filetype=xml
 autocmd BufRead,BufNewfile *.mag set filetype=magpie
 
 " ----------------------------------------------------------------------------
-" Apply plugin specific configurations
-" ----------------------------------------------------------------------------
-execute 'source' v.settings_file
-" ----------------------------------------------------------------------------
 " Allow overriding these settings {{{1
 " ----------------------------------------------------------------------------
 if filereadable(expand("~/.vimrc.local"))
