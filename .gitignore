@@ -1,8 +1,7 @@
 # ignore the backup and tmp directories
-vim-addons
 swap
 backup
 spell
 autoload/plug.vim
-bundles/eclim
+bundles/*
 .cache*unite
