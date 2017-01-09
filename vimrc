@@ -102,7 +102,7 @@ function! BuildYCM(info)
   endif
 endfunction
 
-" The plugin list {{{2 
+" The plugin list {{{2
 call plug#begin(v.plugin_root_dir)
 " baseline...utilities required for other plugins {{{3
 Plug 'tpope/vim-sensible'
@@ -187,7 +187,7 @@ endif
 if has('syntax') && !exists('g:syntax_on')
     syntax enable         " Turn on syntax highlighting
 endif
-  
+
 " ----------------------------------------------------------------------------
 " Moving around, searching and patterns {{{1
 " ----------------------------------------------------------------------------
@@ -243,7 +243,7 @@ set lz                " do not redraw while running macros (LazyRedraw)
 set background=dark
 
 " ignore colorscheme doesn't exist error if isn't installed
-silent! colorscheme gotham256
+silent! colorscheme badwolf
 
 if exists('+colorcolumn')
     set colorcolumn=80    " display a line in column 80 to show you
@@ -315,7 +315,7 @@ set mousemodel=extend
 set mouse=a
 
 " ----------------------------------------------------------------------------
-"  GUI {{{1			     
+"  GUI {{{1
 "  Set these options in .gvimrc
 " See help for 'setting-guifont' for tips on how to set guifont on Mac vs Windows
 " ----------------------------------------------------------------------------
@@ -531,7 +531,7 @@ if has("win32") || has("gui_win32")
     set shellcmdflag=-ExecutionPolicy\ RemoteSigned\ -Command
     set shellquote=\"
     " shellxquote must be a literal space character.
-    set shellxquote= 
+    set shellxquote=
   endif
 endif
 
@@ -559,7 +559,7 @@ scriptencoding utf-8
 " ----------------------------------------------------------------------------
 " Don't save global options. These should be set in vimrc {{{2
 " Idea from tpope/vim-sensible
-set sessionoptions-=options   
+set sessionoptions-=options
 
 " Allow the cursor to go in to "invalid" places {{{2
 set virtualedit=all
@@ -610,4 +610,3 @@ endif
 if has ('unix')
     cmap w!! %!sudo tee > /dev/null %
 endif
-
